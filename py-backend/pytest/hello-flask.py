@@ -1,3 +1,6 @@
+# PoC (proof of concept) for simple flask backend
+# @author: owens
+
 from flask import Flask
 app = Flask(__name__)
 
