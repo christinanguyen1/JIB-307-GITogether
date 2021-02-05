@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request
 # needs fixing
-# from py_backend.pydb.pydb_api import check_login_db
+# from pydb.pydb_api import check_login_db
 
 app = Flask(__name__)
 
