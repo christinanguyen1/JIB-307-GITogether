@@ -19,7 +19,7 @@ class NoSuchUserFoundError(Error):
     pass
 
 
-class IncorrectPasswordError(Error):
+class IncorrectLoginError(Error):
     pass
 
 
@@ -91,7 +91,7 @@ def new_user_db((email, password)):
     conn = sqlite3.connect('gitogether_db')
     if db_table_exists(conn, 'user_login'):
 
-        login = (email, password)
+        login = (email, password,)
 
         if db_row_exists(conn, "user_login", "email", email):
             print("user already exists")
@@ -106,7 +106,7 @@ def new_user_db((email, password)):
         return True
     else:
         c = conn.cursor()
-        login = (email, password)
+        login = (email, password,)
 
         # create table if not already made
         # hash passwords later
@@ -124,3 +124,17 @@ def new_user_db((email, password)):
 
 def check_login_db((email, password)):
     conn = sqlite3.connect('gitogether_db')
+    if not db_table_exists(conn, "user_login"):
+        print("table not found")
+        raise UnknownError
+    c = conn.cursor()
+    login = (email, password,)
+
+    c.execute('SELECT * FROM user_login WHERE email=? AND password=?', login)
+    result = c.fetchone()
+    row_count = c.rowcount
+
+    if row_count == 0:
+        print("incorrect email/password combination; try again")
+        raise IncorrectLoginError
+    return True
