@@ -26,6 +26,10 @@ class IncorrectPasswordError(Error):
 class UserAlreadyRegisteredError(Error):
     pass
 
+
+class UnknownError(Error):
+    pass
+
 # helper functions
 
 
@@ -57,6 +61,20 @@ def db_table_exists(conn, table_name):
         c.close()
         return False
 
+# might need fixing later
+
+
+def db_row_exists(conn, table_name, attribute, value):
+    c = conn.cursor()
+    c.execute("SELECT Name, COUNT(*) FROM %s WHERE %s = %s GROUP BY %s",
+              (table_name, attribute, value, attribute,))
+    result = c.fetchall()
+    row_count = c.rowcount
+    if row_count == 0:
+        return False
+    else:
+        return True
+
 
 # (API CALL) for registering a new user
 # email, password must be a tuple data type (sanitization)
@@ -72,8 +90,14 @@ def new_user_db((email, password)):
 
     conn = sqlite3.connect('gitogether_db')
     if db_table_exists(conn, 'user_login'):
-        c = conn.cursor()
+
         login = (email, password)
+
+        if db_row_exists(conn, "user_login", "email", email):
+            print("user already exists")
+            raise UserAlreadyRegisteredError
+
+        c = conn.cursor()
         c.execute('INSERT INTO user_login VALUES (?)', login)
 
         conn.commit()
@@ -93,3 +117,10 @@ def new_user_db((email, password)):
         conn.close()
         return True
     return False
+
+# (API CALL) for logging a user in
+# email, password must be a tuple data type (sanitization)
+
+
+def check_login_db((email, password)):
+    conn = sqlite3.connect('gitogether_db')
