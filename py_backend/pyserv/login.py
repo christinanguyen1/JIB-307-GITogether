@@ -1,7 +1,8 @@
 # a tiny backend component to get data from the login screen
 
-import flask
-import
+from flask import Flask, render_template, request
+# needs fixing
+# from py_backend.pydb.pydb_api import check_login_db
 
 app = Flask(__name__)
 
@@ -13,4 +14,8 @@ def login():
         email = str(request.form['inputEmail'])
         password = str(request.form['inputPassword'])
         return "test login: " + email + ":" + password
-    return render_template()
+    return render_template("index.html")
+
+
+if __name__ == '__main__':
+    app.run()
