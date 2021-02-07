@@ -51,7 +51,7 @@
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
     </div> -->
-    <button class="btn btn-outline-success" type="submit" id = "signOut">Sign out</button>
+    <button class="btn btn-outline-success" type="submit" id = "signOut" onclick = "location.href='signout.html'">Sign out</button>
   </div>
 </nav>
 
@@ -59,7 +59,9 @@
 
   <div class="starter-template text-center py-5 px-3">
     <h1>Welcome</h1>
-    <p class="lead">About GITogether...</p>
+    <p>Email: {{email}}</p>
+    <p>Password: {{password}}</p>
+    <!-- <p class="lead">About GITogether...</p> -->
   </div>
 
 </main><!-- /.container -->
