@@ -9,7 +9,7 @@ from flask_mail import Mail, Message
 app = Flask(__name__)
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = 'GITogether307@gmail.com'
+app.config['MAIL_USERNAME'] = 'gitogether307@gmail.com'
 app.config['MAIL_PASSWORD'] = 'gitogether123'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
@@ -22,9 +22,6 @@ def login():
         # get email input
         email= str(request.form['inputEmail'])
         password = str(request.form['inputPassword'])
-        msg = Message('Hello', sender = 'GITogether307@gmail.com', recipients = ['christinan2010@gmail.com'])
-        msg.body = "This is the email body"
-        mail.send(msg)
         return render_template("home.html", email = email, password = password)
     return render_template("index.html")
 
@@ -42,34 +39,15 @@ def signout():
 def reset_password():
     return render_template("forgot.html")
 
-@app.route("/reset.html", methods=["GET", "POST"])
-def index():
-    # recip = str(request.form['inputEmail'])
-    msg = Message('Hello', sender = 'GITogether307@gmail.com', recipients = ['christinan2010@gmail.com'])
-    msg.body = "This is the email body"
+@app.route('/action', methods=["POST"])
+def send_email():
+    recip = str(request.form['inputEmail'])
+    msg = Message('Hello', sender = 'gitogether307@gmail.com', recipients = [recip])
+    msg.body = "You requested to reset your password"
     mail.send(msg)
     return render_template("reset.html")
 
 
-# loads home page
-# @app.route('/home.html', methods=["GET", "POST"])
-# def home():
-#     if request.method == "POST":
-#         # get email input
-        
-#         # need to get fname and lname still
-#         email= str(request.form['inputEmail'])
-#         password = str(request.form['inputPassword'])
-#         return render_template("home.html", email = email, password = password,)
-#     return render_template("home.html")
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug = True)
