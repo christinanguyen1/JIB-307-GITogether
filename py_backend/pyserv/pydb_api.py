@@ -160,6 +160,107 @@ def check_login_db(login_tuple):
 
 # select information from tables and insert from tables
 
-# def create_db_table(table_name, kv_pairs, debug):
-#     cmd_str = '''CREATE TABLE ''' + str(table_name) + ''' '''
-#     for key in
+
+class PrimitiveError:
+    pass
+
+
+class CreateTableError(PrimitiveError):
+    pass
+
+
+class InsertTableError(PrimitiveError):
+    pass
+
+
+class SelectTableError(PrimitiveError):
+    pass
+
+# the kv_pairs MUST be 1-1 (each key only has one value)
+# ex. CREATE TABLE dnd_table (name text, class test, level real)
+# @param db_name is the name of the database you want to make the table in ex. "gitogether.db"
+# @param table_name would be dnd_table
+# @param kv_pairs would be {'name':'text', 'class':'text', 'level':'real'}
+# @param debug - True if you want debugging on, false otherwise
+
+
+def create_db_table(db_name: str, table_name: str, kv_pairs: dict, debug: bool):
+    cmd_str = "CREATE TABLE {0} (".format(table_name)
+    attr_counter = 0
+    for key, value in kv_pairs.items():
+        if len(value) != 1:
+            if debug:
+                print("incorrect usage of kv_pair; see function comments")
+            raise CreateTableError
+        else:
+            if attr_counter != len(kv_pairs.keys()) - 1:
+                attr_str = "{0} {1},".format(key, value)
+            else:
+                attr_str = "{0} {1}".format(key, value)
+            if debug:
+                print("parsed table attributes: " + attr_str)
+            cmd_str = cmd_str + attr_str
+        attr_counter += 1
+    cmd_str = cmd_str + ")"
+    if debug:
+        print("CREATE_DB_TABLE cmd_str: {0}".format(cmd_str))
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute(cmd_str)
+    conn.commit()
+    conn.close()
+    return True
+
+
+# ex. dnd_table with attributes (name text, class test, level real)
+# ex. INSERT INTO dnd_table VALUES ('storm silverhand', 'bard', '27')
+# @param db_name is the name of the database you want to make the table in ex. "gitogether.db"
+# @param table_name would be dnd_table
+# @param list would be ['storm silverhand', 'bard', '27']
+# @param debug - True if you want debugging on, false otherwise
+def insert_into_db_table(db_name: str, table_name: str, values: list, debug: bool):
+    cmd_str = "INSERT INTO {0} VALUES (".format(table_name)
+    val_count = 0
+    for value in values:
+        if val_count != len(values) - 1:
+            val_str = "\'{0}\',".format(str(value))
+            if debug:
+                print("parsed insert value: " + val_str)
+            cmd_str = cmd_str + val_str
+        else:
+            val_str = "\'{0}\'".format(str(value))
+            if debug:
+                print("parsed insert value: " + val_str)
+            cmd_str = cmd_str + val_str
+        val_count += 1
+    if debug:
+        print("INSERT_INTO_DB_TABLE cmd_str: {0}".format(cmd_str))
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute(cmd_str)
+    conn.commit()
+    conn.close()
+    return True
+
+
+# ex. dnd_table with attributes (name text, class test, level real)
+# ex. 'SELECT * FROM dnd_table WHERE class=ranger
+# @param db_name is the name of the database you want to make the table in ex. "gitogether.db"
+# @param table_name would be dnd_table
+# @param selector would be '*'
+# @param where would be 'class=ranger' or 'class=ranger AND level=3'
+# @param debug - True if you want debugging on, false otherwise
+# @returns a list of rows from the query, if any. errors when stuff goes bad
+def select_from_db_table(db_name: str, table_name: str, selector: str, where: str, debug: str):
+    cmd_str = "SELECT {0} FROM {1} WHERE {2}".format(
+        table_name, selector, where)
+    if debug:
+        print("SELECT_FROM_DB_TABLE cmd_str: {0}".format(cmd_str))
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute(cmd_str)
+    return_row_list = []
+    for row in c.fetchall():
+        return_row_list.append(row)
+    conn.close()
+    return return_row_list
