@@ -22,6 +22,9 @@ def login():
         password = str(request.form['inputPassword'])
         # returns TRUE if login successful, FALSE if not
         login_status = check_login_db((email, password))
+        # print(login_status)
+        # print(email)
+        # print(password)
         if login_status:
             return render_template("home.html", email=email, password=password)
     return render_template("index.html")
@@ -35,9 +38,15 @@ def signup():
         new_email = str(request.form['inputEmail'])
         new_password = str(request.form['inputPassword'])
         confirm_password = str(request.form['confirmPassword'])
+        if (new_password != confirm_password):
+            print("passwords do not match")
         # returns TRUE if registration successful, FALSE if not
         register_status = new_user_db(
             (new_email, new_password, confirm_password))
+        # print(new_email)
+        # print(new_password)
+        # print(confirm_password)
+        # print(register_status)
         if register_status:
             # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
             return render_template("index.html")
