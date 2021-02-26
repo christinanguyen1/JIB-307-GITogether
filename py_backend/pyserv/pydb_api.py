@@ -31,6 +31,10 @@ class UserAlreadyRegisteredError(Error):
     pass
 
 
+class PasswordNotMatched(Error):
+    pass
+
+
 class UnknownError(Error):
     pass
 
@@ -81,17 +85,21 @@ def db_row_exists(conn, table_name, attribute, value):
 
 
 def new_user_db(login_tuple):
-    if len(login_tuple) > 2:
+    if len(login_tuple) > 3:
         print("invalid login tuple: correct form is (username, password)")
         raise IncorrectLoginError
     email = login_tuple[0]
     password = login_tuple[1]
+    confirm_password = login_tuple[2]
     if "@" not in email and "." not in email:
         print("invalid email: must include @ and .<domain>")
         raise InvalidEmailError
     if not contains_alpha(password) or not contains_digits(password) or not is_len(8, password):
         print("invalid password: must be at least 8 characters long and contain at least one letter and digit")
         raise InvalidPasswordError
+    if password != confirm_password:
+        print("password and confirmed password must match!")
+        raise PasswordNotMatched
 
     conn = sqlite3.connect('gitogether.db')
     if db_table_exists(conn, 'user_login'):

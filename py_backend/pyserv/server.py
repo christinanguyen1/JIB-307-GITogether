@@ -22,7 +22,8 @@ def login():
         password = str(request.form['inputPassword'])
         # returns TRUE if login successful, FALSE if not
         login_status = check_login_db((email, password))
-        return render_template("home.html", email=email, password=password)
+        if login_status:
+            return render_template("home.html", email=email, password=password)
     return render_template("index.html")
 
 # loads signup page
@@ -30,6 +31,16 @@ def login():
 
 @app.route('/signup.html', methods=["GET", "POST"])
 def signup():
+    if request.method == "POST":
+        new_email = str(request.form['inputEmail'])
+        new_password = str(request.form['inputPassword'])
+        confirm_password = str(request.form['confirmPassword'])
+        # returns TRUE if registration successful, FALSE if not
+        register_status = new_user_db(
+            (new_email, new_password, confirm_password))
+        if register_status:
+            # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
+            return render_template("index.html")
     return render_template("signup.html")
 
 # loads signout page
