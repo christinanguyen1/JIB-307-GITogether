@@ -12,6 +12,7 @@ app = Flask(__name__)
 def login():
     if request.method == "POST":
         # get email input
+        # THIS IS A TEST: CREATES NEW USER w/ login info
         email = str(request.form['inputEmail'])
         password = str(request.form['inputPassword'])
         new_user_db((email, password))
