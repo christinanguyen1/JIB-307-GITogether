@@ -7,6 +7,10 @@ import sqlite3
 # error classes
 
 
+class Error:
+    pass
+
+
 class InvalidEmailError(Error):
     pass
 
@@ -39,7 +43,7 @@ def contains_digits(d):
 
 
 def contains_alpha(a):
-    _alpha_chars = re.compile('[a-z][A-Z]')
+    _alpha_chars = re.compile('[a-zA-Z]*')
     return bool(_alpha_chars.search(a))
 
 
@@ -49,38 +53,39 @@ def is_len(min_size, st):
 
 def db_table_exists(conn, table_name):
     c = conn.cursor()
-    c.execute("""
-        SELECT COUNT(*)
-        FROM information_schema.tables
-        WHERE table_name = '{0}'
-        """.format(tablename.replace('\'', '\'\'')))
-    if dbcur.fetchone()[0] == 1:
+    c.execute(
+        ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=? ''', (table_name,))
+    if c.fetchone()[0] == 1:
         c.close()
         return True
     else:
         c.close()
         return False
-
-# might need fixing later
 
 
 def db_row_exists(conn, table_name, attribute, value):
     c = conn.cursor()
-    c.execute("SELECT Name, COUNT(*) FROM %s WHERE %s = %s GROUP BY %s",
-              (table_name, attribute, value, attribute,))
-    result = c.fetchall()
-    row_count = c.rowcount
-    if row_count == 0:
-        return False
-    else:
+    cmd_str = "SELECT count(*) FROM {0} WHERE {1}=\"{2}\"".format(
+        table_name, attribute, str(value))
+    c.execute(cmd_str)
+    if c.fetchone()[0] > 1:
+        c.close()
         return True
+    else:
+        c.close()
+        return False
 
 
 # (API CALL) for registering a new user
 # email, password must be a tuple data type (sanitization)
 
 
-def new_user_db((email, password)):
+def new_user_db(login_tuple):
+    if len(login_tuple) > 2:
+        print("invalid login tuple: correct form is (username, password)")
+        raise IncorrectLoginError
+    email = login_tuple[0]
+    password = login_tuple[1]
     if "@" not in email and "." not in email:
         print("invalid email: must include @ and .<domain>")
         raise InvalidEmailError
@@ -88,17 +93,15 @@ def new_user_db((email, password)):
         print("invalid password: must be at least 8 characters long and contain at least one letter and digit")
         raise InvalidPasswordError
 
-    conn = sqlite3.connect('gitogether_db')
+    conn = sqlite3.connect('gitogether.db')
     if db_table_exists(conn, 'user_login'):
-
-        login = (email, password,)
 
         if db_row_exists(conn, "user_login", "email", email):
             print("user already exists")
             raise UserAlreadyRegisteredError
 
         c = conn.cursor()
-        c.execute('INSERT INTO user_login VALUES (?)', login)
+        c.execute('INSERT INTO user_login VALUES (?,?)', (email, password))
 
         conn.commit()
         conn.close()
@@ -106,12 +109,11 @@ def new_user_db((email, password)):
         return True
     else:
         c = conn.cursor()
-        login = (email, password,)
 
         # create table if not already made
         # hash passwords later
         c.execute('''CREATE TABLE user_login (email text, password text)''')
-        c.execute('INSERT INTO user_login VALUES (?)', login)
+        c.execute('INSERT INTO user_login VALUES (?,?)', (email, password))
 
         conn.commit()
         conn.close()
@@ -122,8 +124,13 @@ def new_user_db((email, password)):
 # email, password must be a tuple data type (sanitization)
 
 
-def check_login_db((email, password)):
-    conn = sqlite3.connect('gitogether_db')
+def check_login_db(login_tuple):
+    if len(login_tuple) > 2:
+        print("invalid login tuple: correct form is (username, password)")
+        raise IncorrectLoginError
+    email = login_tuple[0]
+    password = login_tuple[1]
+    conn = sqlite3.connect('gitogether.db')
     if not db_table_exists(conn, "user_login"):
         print("table not found")
         raise UnknownError
@@ -138,3 +145,13 @@ def check_login_db((email, password)):
         print("incorrect email/password combination; try again")
         raise IncorrectLoginError
     return True
+
+# -------------------------------------------
+# API PRIMITIVE CALLS (USE WITH CAUTION)
+# -------------------------------------------
+
+# select information from tables and insert from tables
+
+# def create_db_table(table_name, kv_pairs, debug):
+#     cmd_str = '''CREATE TABLE ''' + str(table_name) + ''' '''
+#     for key in
