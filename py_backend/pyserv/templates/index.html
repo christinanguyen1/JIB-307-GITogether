@@ -6,36 +6,43 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.79.0">
-    <title>Signin Template · Bootstrap v5.0</title>
+    <title>GITogether</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/">
 
     
 
     <!-- Bootstrap core CSS -->
-<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
 
     
     <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
+    <link href="../static/css/signin.css" rel="stylesheet">
   </head>
   <body class="text-center">
     
 <main class="form-signin">
   <form action="{{url_for("login")}}" method="post">
     <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
-    <img class="mb-4" src="../icons/wasp.svg" alt="" width="72" height="57">
+    <img class="mb-4" src="../static/images/wasp.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+    <!--Email input-->
     <label for="inputEmail" class="visually-hidden">Email address</label>
     <input type="email" id="inputEmail" name="inputEmail" class="form-control" placeholder="Email" required autofocus>
+
+    <!--Password input-->
     <label for="inputPassword" class="visually-hidden">Password</label>
     <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
+    <button class = "textlink" onclick = "location.href='forgot.html'">Forgot password?</button>
+
     <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-    <p class="mt-5 mb-3 text-muted"> Don't have an account?</p>
-    <button id = "signUp" onclick="location.href='signup.html'">Sign up</button>
 
   </form>
+  <p class="mt-5 mb-3 text-muted"> Don't have an account?
+      <button class = "textlink" onclick="location.href='signup.html'">Sign up</button>
+  </p>
 </main>
 
 
