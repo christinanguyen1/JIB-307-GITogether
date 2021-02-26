@@ -135,9 +135,9 @@ def check_login_db(login_tuple):
         print("table not found")
         raise UnknownError
     c = conn.cursor()
-    login = (email, password,)
 
-    c.execute('SELECT * FROM user_login WHERE email=? AND password=?', login)
+    c.execute('SELECT * FROM user_login WHERE email=? AND password=?',
+              (email, password))
     result = c.fetchone()
     row_count = c.rowcount
 
