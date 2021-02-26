@@ -160,6 +160,43 @@ def check_login_db(login_tuple):
 
 # select information from tables and insert from tables
 
-# def create_db_table(table_name, kv_pairs, debug):
-#     cmd_str = '''CREATE TABLE ''' + str(table_name) + ''' '''
-#     for key in
+
+class PrimitiveError:
+    pass
+
+
+class CreateTableError(PrimitiveError):
+    pass
+
+
+# the kv_pairs MUST be 1-1 (each key only has one value)
+# ex. CREATE TABLE dnd_table (name text, class test, level real)
+# @param is the name of the database you want to make the table in ex. "gitogether.db"
+# @param table_name would be dnd_table
+# @param kv_pairs would be {'name':'text', 'class':'text', 'level':'real'}
+# @param debug - True if you want debugging on, false otherwise
+def create_db_table(db_name, table_name, kv_pairs: dict, debug):
+    cmd_str = "CREATE TABLE {0} (".format(table_name)
+    attr_counter = 0
+    for key, value in kv_pairs.items():
+        if len(value) != 1:
+            if debug:
+                print("incorrect usage of kv_pair; see function comments")
+            raise CreateTableError
+        else:
+            if attr_counter != len(kv_pairs.keys()) - 1:
+                attr_str = "{0} {1},".format(key, value)
+            else:
+                attr_str = "{0} {1}".format(key, value)
+            if debug:
+                print("parsed table attributes: " + attr_str)
+            cmd_str = cmd_str + attr_str
+        attr_counter += 1
+    cmd_str = cmd_str + ")"
+    if debug:
+        print("CREATE_DB_TABLE cmd_str: {0}".format(cmd_str))
+    conn = sqlite3.connect(db_name)
+    c = conn.cursor()
+    c.execute(cmd_str)
+    conn.commit()
+    conn.close()
