@@ -59,7 +59,7 @@ def db_table_exists(conn, table_name):
     c = conn.cursor()
     c.execute(
         ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=? ''', (table_name,))
-    if len(c.fetchone()) > 0:
+    if c.fetchone() is not None:
         # print('fetch one works')
         c.close()
         return True
@@ -149,7 +149,7 @@ def check_login_db(login_tuple):
     result = c.fetchone()
 
 
-    if len(result) == 0:
+    if result is None:
         print("incorrect email/password combination; try again")
         raise IncorrectLoginError
     return True
@@ -162,7 +162,7 @@ def forgot_email(email):
     cmd_str = "SELECT password FROM user_login WHERE email='{0}'".format(email)
     c.execute(cmd_str)
     result = c.fetchone()
-    if len(result) == 0:
+    if result is None:
         raise InvalidEmailError
     return result
 
