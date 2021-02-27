@@ -16,7 +16,7 @@
     <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/clubPage.css" rel="stylesheet">
+    <link href="../static/css/club_page.css" rel="stylesheet">
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -51,17 +51,18 @@
             <img src="../static/images/basket.svg" class = "img-fluid h-10 w-10">
         </div>
         <div class = "col text-left clubName">
-            <h1>Underwater Basket Weaving</h1>
+            <h1 id ="cName">Underwater Basket Weaving</h1>
         </div>
         <div class = "col-1">
-            <button class="btn btn-primary w-100" type="submit">Edit</button>
+            <button class="btn btn-primary w-100" type="edit" id = "edit">Edit</button>
+            <button class="btn btn-primary w-100" type="submit" id="save" hidden>Save</button>
         </div>
     </div>
 
     <!--about section-->
     <div class = "about w-50">
         <!-- <div class = "col"> -->
-            <p>
+            <p id = "about">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus 
                 ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus 
                 ante. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus 
@@ -72,7 +73,7 @@
 
     <div class = "recruitInfo">
         <h4>Recruitment Info</h4>
-        <p>Just join our meetings every Tuesday @5:00PM in the CRC pool!</p>
+        <p id = "recruit">Just join our meetings every Tuesday @5:00PM in the CRC pool!</p>
     </div>
 
 
@@ -99,8 +100,6 @@
 
     </div>
 
-
-
   <!-- <div class="starter-template text-center py-5 px-3">
     <h1>Club info</h1> -->
     <!-- <p>Email: {{email}}</p>
@@ -113,6 +112,9 @@
 
 
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- edit and save button functionalities-->
+    <script src="club_page.js"></script>
 
     <!--JS scripts needed for dropdown menu to work-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
