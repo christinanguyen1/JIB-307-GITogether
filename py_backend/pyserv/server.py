@@ -62,6 +62,12 @@ def signout():
     return render_template("signout.html")
 
 
+# loads register club page
+@app.route('/registerClub.html', methods=["GET", "POST"])
+def reset_password():
+    return render_template("registerClub.html")
+
+
 @app.route('/forgot.html', methods=["GET", "POST"])
 def reset_password():
     return render_template("forgot.html")
