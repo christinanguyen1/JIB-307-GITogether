@@ -1,0 +1,27 @@
+body {
+    padding-top: 5rem;
+}
+#signOut {
+    border-color: white;
+    color: white;
+}
+  /* #regButton {
+    
+  } */
+.clubName {
+    margin: auto;
+}
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 500px;
+}
+.header {
+      padding-right: 5px;
+}
+.dropdown-menu {
+    /* prevents dropdown from going off screen */
+    left: auto;
+    right: 0;
+}
