@@ -67,7 +67,7 @@ def signout():
 
 # loads register club page
 @app.route('/registerClub.html', methods=["GET", "POST"])
-def reset_password():
+def reg_club():
     return render_template("registerClub.html")
 
 
@@ -92,5 +92,5 @@ def send_email():
 
 
 if __name__ == '__main__':
-    # app.run(debug = True)
-    app.run()
+    app.run(debug = True)
+    # app.run()
