@@ -1,10 +1,12 @@
 # a tiny backend component to get data from the login screen
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect, url_for
 from pydb_api import *
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'gitogether307@gmail.com'
@@ -25,8 +27,9 @@ def login():
             login_status = check_login_db((email, password))
             if login_status:
                 return render_template("home.html", email=email, password=password)
-        except: 
-            print("account does not exist")
+        except:
+            flash("Invalid email/password combination")
+            return redirect(url_for('login'))
         # print(login_status)
         # print(email)
         # print(password)
@@ -43,15 +46,15 @@ def signup():
         new_password = str(request.form['inputPassword'])
         confirm_password = str(request.form['confirmPassword'])
         # returns TRUE if registration successful, FALSE if not
-        register_status = new_user_db(
-            (new_email, new_password, confirm_password))
-        # print(new_email)
-        # print(new_password)
-        # print(confirm_password)
-        # print(register_status)
-        if register_status:
-            # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
-            return render_template("index.html")
+        try:
+            register_status = new_user_db(
+                (new_email, new_password, confirm_password))
+            if register_status:
+                # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
+                return render_template("index.html")
+        except:
+            flash("Either:\nEmail does not include @ or .<domain>\nPassword does not contain atleast 8 characters with aleast one letter and digit\nPasswords don't match\nEmail already exists")
+            return redirect(url_for('signup'))
     return render_template("signup.html")
 
 # loads signout page
