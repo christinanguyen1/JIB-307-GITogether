@@ -47,6 +47,10 @@ def send_email():
     mail.send(msg)
     return render_template("reset.html")
 
+@app.route('/home', methods=["GET", "POST"])
+def clubPage():
+    return render_template("clubPage.html")
+
 
 
 if __name__ == '__main__':
