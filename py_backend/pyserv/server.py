@@ -21,12 +21,16 @@ def login():
         email = str(request.form['inputEmail'])
         password = str(request.form['inputPassword'])
         # returns TRUE if login successful, FALSE if not
-        login_status = check_login_db((email, password))
+        try:
+            login_status = check_login_db((email, password))
+            if login_status:
+                return render_template("home.html", email=email, password=password)
+        except: 
+            print("account does not exist")
         # print(login_status)
         # print(email)
         # print(password)
-        if login_status:
-            return render_template("home.html", email=email, password=password)
+        
     return render_template("index.html")
 
 # loads signup page
@@ -38,8 +42,6 @@ def signup():
         new_email = str(request.form['inputEmail'])
         new_password = str(request.form['inputPassword'])
         confirm_password = str(request.form['confirmPassword'])
-        if (new_password != confirm_password):
-            print("passwords do not match")
         # returns TRUE if registration successful, FALSE if not
         register_status = new_user_db(
             (new_email, new_password, confirm_password))
@@ -68,11 +70,16 @@ def reset_password():
 @app.route('/action', methods=["POST"])
 def send_email():
     recip = str(request.form['inputEmail'])
-    msg = Message('Hello', sender='gitogether307@gmail.com',
-                  recipients=[recip])
-    msg.body = "You requested to reset your password"
-    mail.send(msg)
-    return render_template("reset.html")
+    try: 
+        forgotten_password = forgot_email(recip)
+        msg = Message('Hello', sender='gitogether307@gmail.com',
+                    recipients=[recip])
+        msg.body = "Your password is: {0}".format(forgotten_password[0])
+        mail.send(msg)
+        return render_template("reset.html")
+    except:
+        print("That email does not exist")
+        return render_template("forgot.html")
 
 
 if __name__ == '__main__':

@@ -59,7 +59,8 @@ def db_table_exists(conn, table_name):
     c = conn.cursor()
     c.execute(
         ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=? ''', (table_name,))
-    if c.fetchone()[0] == 1:
+    if len(c.fetchone()) > 0:
+        # print('fetch one works')
         c.close()
         return True
     else:
@@ -72,7 +73,7 @@ def db_row_exists(conn, table_name, attribute, value):
     cmd_str = "SELECT count(*) FROM {0} WHERE {1}=\"{2}\"".format(
         table_name, attribute, str(value))
     c.execute(cmd_str)
-    if c.fetchone()[0] > 1:
+    if c.fetchone() > 1:
         c.close()
         return True
     else:
@@ -143,16 +144,27 @@ def check_login_db(login_tuple):
         print("table not found")
         raise UnknownError
     c = conn.cursor()
-
-    c.execute('SELECT * FROM user_login WHERE email=? AND password=?',
-              (email, password))
+    cmd_str = "SELECT * FROM user_login WHERE email='{0}' AND password='{1}'".format(email, password)
+    c.execute(cmd_str)
     result = c.fetchone()
-    row_count = c.rowcount
 
-    if row_count == 0:
+
+    if len(result) == 0:
         print("incorrect email/password combination; try again")
         raise IncorrectLoginError
     return True
+
+# (API CALL) for finding if email exists in database for forgot 
+# email is string and returns a string with the password and a message
+def forgot_email(email):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    cmd_str = "SELECT password FROM user_login WHERE email='{0}'".format(email)
+    c.execute(cmd_str)
+    result = c.fetchone()
+    if len(result) == 0:
+        raise InvalidEmailError
+    return result
 
 # -------------------------------------------
 # API PRIMITIVE CALLS (USE WITH CAUTION)
