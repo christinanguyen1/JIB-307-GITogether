@@ -101,7 +101,7 @@ def home():
         club_description = str(request.form['description'])
         club_recruitment = str(request.form['recruitment'])
         insert_into_club_table(club_name, club_description, club_recruitment)
-        flash("Received Club Verification")
+        flash("Club Verification Received")
         return render_template("home.html")
     return render_template("home.html")
 
