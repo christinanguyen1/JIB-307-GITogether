@@ -73,7 +73,7 @@ def db_row_exists(conn, table_name, attribute, value):
     cmd_str = "SELECT count(*) FROM {0} WHERE {1}=\"{2}\"".format(
         table_name, attribute, str(value))
     c.execute(cmd_str)
-    if c.fetchone() > 1:
+    if c.fetchone() is not None:
         c.close()
         return True
     else:
@@ -104,10 +104,11 @@ def new_user_db(login_tuple):
 
     conn = sqlite3.connect('gitogether.db')
     if db_table_exists(conn, 'user_login'):
-
+        
         if db_row_exists(conn, "user_login", "email", email):
             print("user already exists")
             raise UserAlreadyRegisteredError
+        
 
         c = conn.cursor()
         c.execute('INSERT INTO user_login VALUES (?,?)', (email, password))
@@ -147,6 +148,8 @@ def check_login_db(login_tuple):
     cmd_str = "SELECT * FROM user_login WHERE email='{0}' AND password='{1}'".format(email, password)
     c.execute(cmd_str)
     result = c.fetchone()
+
+    conn.close()
 
 
     if result is None:
@@ -254,6 +257,14 @@ def insert_into_db_table(db_name: str, table_name: str, values: list, debug: boo
     conn.close()
     return True
 
+def insert_into_club_table(name: str, desc: str, rec: str):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    cmd_str = "INSERT INTO clubs (club_name, club_description, club_recruitment) VALUES ('{0}', '{1}', '{2}')".format(name, desc, rec)
+    c.execute(cmd_str)
+    conn.commit()
+    conn.close()
+    print("success")
 
 # ex. dnd_table with attributes (name text, class test, level real)
 # ex. 'SELECT * FROM dnd_table WHERE class=ranger
