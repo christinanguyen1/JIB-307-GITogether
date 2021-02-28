@@ -73,7 +73,8 @@ def db_row_exists(conn, table_name, attribute, value):
     cmd_str = "SELECT count(*) FROM {0} WHERE {1}=\"{2}\"".format(
         table_name, attribute, str(value))
     c.execute(cmd_str)
-    if c.fetchone() is not None:
+    result = c.fetchone()
+    if result[0] > 0:
         c.close()
         return True
     else:
@@ -260,11 +261,13 @@ def insert_into_db_table(db_name: str, table_name: str, values: list, debug: boo
 def insert_into_club_table(name: str, desc: str, rec: str):
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
-    cmd_str = "INSERT INTO clubs (club_name, club_description, club_recruitment) VALUES ('{0}', '{1}', '{2}')".format(name, desc, rec)
-    c.execute(cmd_str)
+    # cmd_str = "INSERT INTO clubs (club_name, club_description, club_recruitment) VALUES ('{0}', '{1}', '{2}')".format(name, desc, rec)
+    # print(cmd_str)
+    c.execute('INSERT INTO clubs (club_name, club_description, club_recruitment) VALUES (?,?,?)', (name, desc, rec))
+    # c.execute(cmd_str)
     conn.commit()
     conn.close()
-    print("success")
+    print("success of adding club")
 
 # ex. dnd_table with attributes (name text, class test, level real)
 # ex. 'SELECT * FROM dnd_table WHERE class=ranger

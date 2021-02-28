@@ -23,17 +23,18 @@
   <body class="text-center">
     
 <main class="form-register">
-  <form>
+  <form action="{{url_for("home")}}" method="post">
     <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
     <img class="mb-4" src="../static/images/wasp.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Club Registration Request</h1>
     
     <label for="name" class="visually-hidden"></label>
-    <input type="name" id="name" class="form-control" placeholder="Club Name" required autofocus>
+    <input type="name" id="name" name="club_name" class="form-control" placeholder="Club Name" required autofocus>
     <label for="recruit" class="visually-hidden"></label>
     
-    <textarea class= "form-control z-depth-1 mb-1" rows = "5" cols = "60" name = "recruitment" placeholder="Recruitment Info"></textarea>
+    
     <textarea class= "form-control z-depth-1 mb-1" rows = "5" cols = "60" name = "description" placeholder="Club Description"></textarea>
+    <textarea class= "form-control z-depth-1 mb-1" rows = "5" cols = "60" name = "recruitment" placeholder="Recruitment Info"></textarea>
     </textarea>
 
     <input type="recruit" id="contactFb" class="form-control mb-1" placeholder="Facebook Link" required autofocus>
