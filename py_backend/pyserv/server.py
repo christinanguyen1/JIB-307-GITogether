@@ -74,10 +74,6 @@ def reg_club():
 def club_page():
     return render_template("club_page.html")
 
-@app.route('/home.html', methods=["GET", "POST"])
-def home():
-    return render_template("home.html")
-
 
 @app.route('/forgot.html', methods=["GET", "POST"])
 def reset_password():
