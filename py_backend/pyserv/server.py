@@ -60,15 +60,23 @@ def signup():
 # loads signout page
 
 
-@app.route('/signout.html', methods=["GET", "POST"])
+@app.route('/index.html', methods=["GET", "POST"])
 def signout():
-    return render_template("signout.html")
+    return render_template("index.html")
 
 
 # loads register club page
-@app.route('/registerClub.html', methods=["GET", "POST"])
+@app.route('/register_club.html', methods=["GET", "POST"])
 def reg_club():
-    return render_template("registerClub.html")
+    return render_template("register_club.html")
+
+@app.route('/club_page.html', methods=["GET", "POST"])
+def club_page():
+    return render_template("club_page.html")
+
+@app.route('/home.html', methods=["GET", "POST"])
+def home():
+    return render_template("home.html")
 
 
 @app.route('/forgot.html', methods=["GET", "POST"])
