@@ -67,7 +67,9 @@ def signout():
 
 # loads register club page
 @app.route('/registerClub.html', methods=["GET", "POST"])
+
 def register_club():
+
     return render_template("registerClub.html")
 
 
@@ -101,5 +103,5 @@ def home():
 
 
 if __name__ == '__main__':
-    # app.run(debug = True)
-    app.run()
+    app.run(debug = True)
+    # app.run()
