@@ -67,7 +67,9 @@ def signout():
 
 # loads register club page
 @app.route('/registerClub.html', methods=["GET", "POST"])
-def reg_club():
+
+def register_club():
+
     return render_template("registerClub.html")
 
 
@@ -89,6 +91,15 @@ def send_email():
     except:
         print("That email does not exist")
         return render_template("forgot.html")
+
+@app.route('/home.html', methods=["GET", "POST"])
+def home():
+    if request.method == 'POST':
+        club_name = str(request.form['club_name'])
+        club_description = str(request.form['description'])
+        club_recruitment = str(request.form['recruitment'])
+        insert_into_club_table(club_name, club_description, club_recruitment)
+    return render_template("home.html")
 
 
 if __name__ == '__main__':
