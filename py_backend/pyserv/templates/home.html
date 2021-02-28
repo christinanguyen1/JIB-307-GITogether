@@ -59,6 +59,19 @@
 
 <main class="container">
 
+  {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{message}}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    
+    {% block body %} {% endblock %}
+
   <div class="starter-template text-center py-5 px-3">
     <h1>Welcome</h1>
     <!-- <p>Email: {{email}}</p>

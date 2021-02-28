@@ -91,8 +91,8 @@ def send_email():
         mail.send(msg)
         return render_template("reset.html")
     except:
-        print("That email does not exist")
-        return render_template("forgot.html")
+        flash("That email does not exist")
+        return redirect(url_for('reset_password'))
 
 @app.route('/home.html', methods=["GET", "POST"])
 def home():
@@ -101,6 +101,8 @@ def home():
         club_description = str(request.form['description'])
         club_recruitment = str(request.form['recruitment'])
         insert_into_club_table(club_name, club_description, club_recruitment)
+        flash("Received Club Verification")
+        return render_template("home.html")
     return render_template("home.html")
 
 
