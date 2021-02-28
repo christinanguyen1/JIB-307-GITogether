@@ -26,7 +26,8 @@ def login():
         try:
             login_status = check_login_db((email, password))
             if login_status:
-                return render_template("home.html", email=email, password=password)
+                items = render_clubs_homepage()
+                return render_template("home.html", email=email, password=password, items = items)
         except:
             flash("Invalid email/password combination")
             return redirect(url_for('login'))
@@ -102,10 +103,11 @@ def home():
         club_recruitment = str(request.form['recruitment'])
         insert_into_club_table(club_name, club_description, club_recruitment)
         flash("Club Verification Received")
-        return render_template("home.html")
+        items = render_clubs_homepage()
+        return render_template("home.html", items=items)
     return render_template("home.html")
 
-
+    
 if __name__ == '__main__':
     app.run(debug = True)
     # app.run()
