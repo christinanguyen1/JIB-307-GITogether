@@ -290,3 +290,14 @@ def select_from_db_table(db_name: str, table_name: str, selector: str, where: st
         return_row_list.append(row)
     conn.close()
     return return_row_list
+
+def render_clubs_homepage():
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT club_name, club_description FROM clubs')
+    items = c.fetchall()
+    return items
+
+def render_clubs_clubpage():
+    #implement fot the club pages
+    return None
