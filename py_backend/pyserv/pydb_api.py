@@ -298,6 +298,11 @@ def render_clubs_homepage():
     items = c.fetchall()
     return items
 
-def render_clubs_clubpage():
-    #implement fot the club pages
-    return None
+def render_clubs_clubpage(variable):
+    #implement for the club pages
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute("SELECT club_name, club_description, club_recruitment FROM clubs WHERE club_name = '{0}'".format(variable))
+    items = c.fetchall()
+    return items
+
