@@ -71,8 +71,13 @@ def signout():
 def reg_club():
     return render_template("register_club.html")
 
-@app.route('/club_page.html', methods=["GET", "POST"])
-def club_page():
+@app.route('/club_page.html/<variable>', methods=["GET", "POST"])
+def club_page(variable):
+    if request.method == 'POST':
+        print("entered request")
+        joonyy = str(request.form['joon'])
+        print(joonyy)
+    print(variable)
     return render_template("club_page.html")
 
 
@@ -98,6 +103,7 @@ def send_email():
 @app.route('/home.html', methods=["GET", "POST"])
 def home():
     if request.method == 'POST':
+        print("entered home fucntion" )
         club_name = str(request.form['club_name'])
         club_description = str(request.form['description'])
         club_recruitment = str(request.form['recruitment'])
