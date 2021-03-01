@@ -73,12 +73,12 @@ def reg_club():
 
 @app.route('/club_page.html/<variable>', methods=["GET", "POST"])
 def club_page(variable):
-    if request.method == 'POST':
-        print("entered request")
-        joonyy = str(request.form['joon'])
-        print(joonyy)
-    print(variable)
-    return render_template("club_page.html")
+    items = render_clubs_clubpage(variable)
+    for item in items:
+        item1 = item[0]
+        item2 = item[1]
+        item3 = item[2]
+    return render_template("club_page.html", item1=item1, item2=item2, item3=item3)
 
 
 @app.route('/forgot.html', methods=["GET", "POST"])
