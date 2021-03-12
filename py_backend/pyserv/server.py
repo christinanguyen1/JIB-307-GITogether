@@ -1,10 +1,12 @@
 # a tiny backend component to get data from the login screen
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, flash, redirect, url_for
 from pydb_api import *
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'gitogether307@gmail.com'
@@ -21,9 +23,18 @@ def login():
         email = str(request.form['inputEmail'])
         password = str(request.form['inputPassword'])
         # returns TRUE if login successful, FALSE if not
-        login_status = check_login_db((email, password))
-        if login_status:
-            return render_template("home.html", email=email, password=password)
+        try:
+            login_status = check_login_db((email, password))
+            if login_status:
+                items = render_clubs_homepage()
+                return render_template("home.html", email=email, password=password, items = items)
+        except:
+            flash("Invalid email/password combination")
+            return redirect(url_for('login'))
+        # print(login_status)
+        # print(email)
+        # print(password)
+        
     return render_template("index.html")
 
 # loads signup page
@@ -36,19 +47,38 @@ def signup():
         new_password = str(request.form['inputPassword'])
         confirm_password = str(request.form['confirmPassword'])
         # returns TRUE if registration successful, FALSE if not
-        register_status = new_user_db(
-            (new_email, new_password, confirm_password))
-        if register_status:
-            # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
-            return render_template("index.html")
+        try:
+            register_status = new_user_db(
+                (new_email, new_password, confirm_password))
+            if register_status:
+                # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
+                return render_template("index.html")
+        except:
+            flash("Either:\nEmail does not include @ or .<domain>\nPassword does not contain atleast 8 characters with aleast one letter and digit\nPasswords don't match\nEmail already exists")
+            return redirect(url_for('signup'))
     return render_template("signup.html")
 
 # loads signout page
 
 
-@app.route('/signout.html', methods=["GET", "POST"])
+@app.route('/index.html', methods=["GET", "POST"])
 def signout():
-    return render_template("signout.html")
+    return render_template("index.html")
+
+
+# loads register club page
+@app.route('/register_club.html', methods=["GET", "POST"])
+def reg_club():
+    return render_template("register_club.html")
+
+@app.route('/club_page.html/<variable>', methods=["GET", "POST"])
+def club_page(variable):
+    items = render_clubs_clubpage(variable)
+    for item in items:
+        item1 = item[0]
+        item2 = item[1]
+        item3 = item[2]
+    return render_template("club_page.html", item1=item1, item2=item2, item3=item3)
 
 
 @app.route('/forgot.html', methods=["GET", "POST"])
@@ -59,13 +89,31 @@ def reset_password():
 @app.route('/action', methods=["POST"])
 def send_email():
     recip = str(request.form['inputEmail'])
-    msg = Message('Hello', sender='gitogether307@gmail.com',
-                  recipients=[recip])
-    msg.body = "You requested to reset your password"
-    mail.send(msg)
-    return render_template("reset.html")
+    try: 
+        forgotten_password = forgot_email(recip)
+        msg = Message('Hello', sender='gitogether307@gmail.com',
+                    recipients=[recip])
+        msg.body = "Your password is: {0}".format(forgotten_password[0])
+        mail.send(msg)
+        return render_template("reset.html")
+    except:
+        flash("That email does not exist")
+        return redirect(url_for('reset_password'))
 
+@app.route('/home.html', methods=["GET", "POST"])
+def home():
+    if request.method == 'POST':
+        print("entered home fucntion" )
+        club_name = str(request.form['club_name'])
+        club_description = str(request.form['description'])
+        club_recruitment = str(request.form['recruitment'])
+        insert_into_club_table(club_name, club_description, club_recruitment)
+        flash("Club Verification Received")
+        items = render_clubs_homepage()
+        return render_template("home.html", items=items)
+    return render_template("home.html")
 
+    
 if __name__ == '__main__':
-    # app.run(debug = True)
-    app.run()
+    app.run(debug = True)
+    # app.run()

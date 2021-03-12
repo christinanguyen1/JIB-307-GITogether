@@ -64,7 +64,8 @@ def db_table_exists(conn, table_name):
     c = conn.cursor()
     c.execute(
         ''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name=? ''', (table_name,))
-    if c.fetchone()[0] == 1:
+    if c.fetchone() is not None:
+        # print('fetch one works')
         c.close()
         return True
     else:
@@ -77,7 +78,8 @@ def db_row_exists(conn, table_name, attribute, value):
     cmd_str = "SELECT count(*) FROM {0} WHERE {1}=\"{2}\"".format(
         table_name, attribute, str(value))
     c.execute(cmd_str)
-    if c.fetchone()[0] > 1:
+    result = c.fetchone()
+    if result[0] > 0:
         c.close()
         return True
     else:
@@ -123,10 +125,11 @@ def new_user_db(login_tuple):
 
     conn = sqlite3.connect('gitogether.db')
     if db_table_exists(conn, 'user_login'):
-
+        
         if db_row_exists(conn, "user_login", "email", email):
             print("user already exists")
             raise UserAlreadyRegisteredError
+        
 
         c = conn.cursor()
         # need to hash password and then insert into DB
@@ -172,18 +175,32 @@ def check_login_db(login_tuple):
         print("table not found")
         raise UnknownError
     c = conn.cursor()
-
+    
     c.execute('SELECT * FROM user_login WHERE email=?',
               (email,))
+
     result = c.fetchone()
-    row_count = c.rowcount
 
     if row_count == 0:
         print("incorrect email: not found in db")
         raise EmailNotFoundError
+        
+    conn.close()
 
     db_password = result[1]
     return check_hash_password(password, db_password)
+
+# (API CALL) for finding if email exists in database for forgot 
+# email is string and returns a string with the password and a message
+def forgot_email(email):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    cmd_str = "SELECT password FROM user_login WHERE email='{0}'".format(email)
+    c.execute(cmd_str)
+    result = c.fetchone()
+    if result is None:
+        raise InvalidEmailError
+    return result
 
 # -------------------------------------------
 # API PRIMITIVE CALLS (USE WITH CAUTION)
@@ -273,6 +290,16 @@ def insert_into_db_table(db_name: str, table_name: str, values: list, debug: boo
     conn.close()
     return True
 
+def insert_into_club_table(name: str, desc: str, rec: str):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    # cmd_str = "INSERT INTO clubs (club_name, club_description, club_recruitment) VALUES ('{0}', '{1}', '{2}')".format(name, desc, rec)
+    # print(cmd_str)
+    c.execute('INSERT INTO clubs (club_name, club_description, club_recruitment) VALUES (?,?,?)', (name, desc, rec))
+    # c.execute(cmd_str)
+    conn.commit()
+    conn.close()
+    print("success of adding club")
 
 # ex. dnd_table with attributes (name text, class test, level real)
 # ex. 'SELECT * FROM dnd_table WHERE class=ranger
@@ -295,3 +322,19 @@ def select_from_db_table(db_name: str, table_name: str, selector: str, where: st
         return_row_list.append(row)
     conn.close()
     return return_row_list
+
+def render_clubs_homepage():
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT club_name, club_description FROM clubs')
+    items = c.fetchall()
+    return items
+
+def render_clubs_clubpage(variable):
+    #implement for the club pages
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute("SELECT club_name, club_description, club_recruitment FROM clubs WHERE club_name = '{0}'".format(variable))
+    items = c.fetchall()
+    return items
+
