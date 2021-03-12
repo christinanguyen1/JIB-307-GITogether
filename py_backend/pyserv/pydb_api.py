@@ -3,6 +3,7 @@
 
 import re
 import sqlite3
+import bcrypt
 
 # error classes
 
@@ -20,6 +21,10 @@ class InvalidPasswordError(Error):
 
 
 class NoSuchUserFoundError(Error):
+    pass
+
+
+class EmailNotFoundError(Error):
     pass
 
 
@@ -79,6 +84,21 @@ def db_row_exists(conn, table_name, attribute, value):
         c.close()
         return False
 
+# bcrypt API tools (for password hashing)
+
+
+def hash_password(plaintext_pass):
+    pass_bytes = plaintext_pass.encode("utf-8")
+    # hash password with a randomly generated salt
+    cyphertext_pass = bcrypt.hashpw(pass_bytes, bcrypt.gensalt())
+    return cyphertext_pass
+
+
+def check_hash_password(plaintext_pass, cyphertext_pass):
+    plain_pass_bytes = plaintext_pass.encode("utf-8")
+    cypher_pass_bytes = cyphertext_pass.encode("utf-8")
+    return bcrypt.checkpw(plain_pass_bytes, cypher_pass_bytes)
+
 
 # (API CALL) for registering a new user
 # email, password must be a tuple data type (sanitization)
@@ -109,7 +129,13 @@ def new_user_db(login_tuple):
             raise UserAlreadyRegisteredError
 
         c = conn.cursor()
-        c.execute('INSERT INTO user_login VALUES (?,?)', (email, password))
+        # need to hash password and then insert into DB
+        cyphertext_pass = hash_password(password)
+        c.execute('INSERT INTO user_login VALUES (?,?)',
+                  (email, cyphertext_pass))
+
+        print("inserted (" + str(email) + ", " +
+              password + ", " + cyphertext_pass + ")")
 
         conn.commit()
         conn.close()
@@ -121,7 +147,10 @@ def new_user_db(login_tuple):
         # create table if not already made
         # hash passwords later
         c.execute('''CREATE TABLE user_login (email text, password text)''')
-        c.execute('INSERT INTO user_login VALUES (?,?)', (email, password))
+        # need to hash password and then insert into DB
+        cyphertext_pass = hash_password(password)
+        c.execute('INSERT INTO user_login VALUES (?,?)',
+                  (email, cyphertext_pass))
 
         conn.commit()
         conn.close()
@@ -144,15 +173,17 @@ def check_login_db(login_tuple):
         raise UnknownError
     c = conn.cursor()
 
-    c.execute('SELECT * FROM user_login WHERE email=? AND password=?',
-              (email, password))
+    c.execute('SELECT * FROM user_login WHERE email=?',
+              (email,))
     result = c.fetchone()
     row_count = c.rowcount
 
     if row_count == 0:
-        print("incorrect email/password combination; try again")
-        raise IncorrectLoginError
-    return True
+        print("incorrect email: not found in db")
+        raise EmailNotFoundError
+
+    db_password = result[1]
+    return check_hash_password(password, db_password)
 
 # -------------------------------------------
 # API PRIMITIVE CALLS (USE WITH CAUTION)
