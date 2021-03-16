@@ -86,22 +86,23 @@ def db_row_exists(conn, table_name, attribute, value):
 
 
 def hash_password(plaintext_pass):
-    pass_bytes = plaintext_pass.encode("utf-8")
+    return plaintext_pass
+    #pass_bytes = plaintext_pass.encode("utf-8")
     # hash password with a randomly generated salt
-    cyphertext_pass = bcrypt.hashpw(pass_bytes, bcrypt.gensalt())
-    return cyphertext_pass
+    #cyphertext_pass = bcrypt.hashpw(pass_bytes, bcrypt.gensalt())
+    # return cyphertext_pass
 
 
 def check_hash_password(plaintext_pass, cyphertext_pass):
-    print("check: plain: " + str(plaintext_pass) +
-          "stored: " + str(cyphertext_pass))
-    plain_pass_bytes = plaintext_pass.encode("utf-8")
-    cypher_pass_bytes = cyphertext_pass.encode("utf-8")
-    return bcrypt.checkpw(plain_pass_bytes, cypher_pass_bytes)
+    return plaintext_pass == cyphertext_pass
+    # print("check: plain: " + str(plaintext_pass) +
+    #       "stored: " + str(cyphertext_pass))
+    # plain_pass_bytes = plaintext_pass.encode("utf-8")
+    # cypher_pass_bytes = cyphertext_pass.encode("utf-8")
+    # return bcrypt.checkpw(plain_pass_bytes, cypher_pass_bytes)
 
-
-# (API CALL) for registering a new user
-# email, password must be a tuple data type (sanitization)
+    # (API CALL) for registering a new user
+    # email, password must be a tuple data type (sanitization)
 
 
 def new_user_db(login_tuple):
