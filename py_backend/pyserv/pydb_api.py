@@ -124,16 +124,16 @@ def new_user_db(login_tuple):
         raise PasswordNotMatched
 
     conn = sqlite3.connect('gitogether.db')
-    if db_table_exists(conn, 'user_login'):
+    if db_table_exists(conn, 'user'):
 
-        if db_row_exists(conn, "user_login", "email", email):
+        if db_row_exists(conn, "user", "email", email):
             print("user already exists")
             raise UserAlreadyRegisteredError
 
         c = conn.cursor()
         # need to hash password and then insert into DB
         cyphertext_pass = str(hash_password(password))
-        c.execute('INSERT INTO user_login VALUES (?,?)',
+        c.execute('INSERT INTO user VALUES (?,?)',
                   (email, cyphertext_pass))
 
         print("inserted (" + str(email) + ", " +
@@ -148,10 +148,10 @@ def new_user_db(login_tuple):
 
         # create table if not already made
         # hash passwords later
-        c.execute('''CREATE TABLE user_login (email text, password text)''')
+        c.execute('''CREATE TABLE user (email text, password text)''')
         # need to hash password and then insert into DB
         cyphertext_pass = str(hash_password(password))
-        c.execute('INSERT INTO user_login VALUES (?,?)',
+        c.execute('INSERT INTO user VALUES (?,?)',
                   (email, cyphertext_pass))
 
         conn.commit()
@@ -170,12 +170,12 @@ def check_login_db(login_tuple):
     email = login_tuple[0]
     password = login_tuple[1]
     conn = sqlite3.connect('gitogether.db')
-    if not db_table_exists(conn, "user_login"):
+    if not db_table_exists(conn, "user"):
         print("table not found")
         raise UnknownError
     c = conn.cursor()
 
-    c.execute('SELECT * FROM user_login WHERE email=?',
+    c.execute('SELECT * FROM user WHERE email=?',
               (email,))
 
     result = c.fetchone()
@@ -196,7 +196,7 @@ def check_login_db(login_tuple):
 def forgot_email(email):
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
-    cmd_str = "SELECT password FROM user_login WHERE email='{0}'".format(email)
+    cmd_str = "SELECT password FROM user WHERE email='{0}'".format(email)
     c.execute(cmd_str)
     result = c.fetchone()
     if result is None:
