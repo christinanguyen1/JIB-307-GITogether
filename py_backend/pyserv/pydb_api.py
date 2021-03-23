@@ -92,15 +92,17 @@ def db_row_exists(conn, table_name, attribute, value):
 def hash_password(plaintext_pass):
     pass_bytes = plaintext_pass.encode("utf-8")
     # hash password with a randomly generated salt
-    cyphertext_pass = bcrypt.hashpw(pass_bytes, bcrypt.gensalt())
+    cost_rounds = 12
+    salt = bcrypt.gensalt(cost_rounds)
+    cyphertext_pass = bcrypt.hashpw(pass_bytes, salt).decode('utf8', 'stict')
     return cyphertext_pass
 
 
 def check_hash_password(plaintext_pass, cyphertext_pass):
     plain_pass_bytes = plaintext_pass.encode("utf-8")
     cypher_pass_bytes = cyphertext_pass.encode("utf-8")
-    return bcrypt.checkpw(plain_pass_bytes, cypher_pass_bytes)
-
+    password_matches = bcrypt.checkpw(plain_pass_bytes, cypher_pass_bytes)
+    return password_matches
 
 # (API CALL) for registering a new user
 # email, password must be a tuple data type (sanitization)
@@ -125,11 +127,10 @@ def new_user_db(login_tuple):
 
     conn = sqlite3.connect('gitogether.db')
     if db_table_exists(conn, 'user_login'):
-        
+
         if db_row_exists(conn, "user_login", "email", email):
             print("user already exists")
             raise UserAlreadyRegisteredError
-        
 
         c = conn.cursor()
         # need to hash password and then insert into DB
@@ -175,7 +176,7 @@ def check_login_db(login_tuple):
         print("table not found")
         raise UnknownError
     c = conn.cursor()
-    
+
     c.execute('SELECT * FROM user_login WHERE email=?',
               (email,))
 
@@ -184,14 +185,16 @@ def check_login_db(login_tuple):
     if row_count == 0:
         print("incorrect email: not found in db")
         raise EmailNotFoundError
-        
+
     conn.close()
 
     db_password = result[1]
     return check_hash_password(password, db_password)
 
-# (API CALL) for finding if email exists in database for forgot 
+# (API CALL) for finding if email exists in database for forgot
 # email is string and returns a string with the password and a message
+
+
 def forgot_email(email):
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
@@ -290,6 +293,7 @@ def insert_into_db_table(db_name: str, table_name: str, values: list, debug: boo
     conn.close()
     return True
 
+
 def insert_into_club_table(name: str, desc: str, rec: str):
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
@@ -309,6 +313,8 @@ def insert_into_club_table(name: str, desc: str, rec: str):
 # @param where would be 'class=ranger' or 'class=ranger AND level=3'
 # @param debug - True if you want debugging on, false otherwise
 # @returns a list of rows from the query, if any. errors when stuff goes bad
+
+
 def select_from_db_table(db_name: str, table_name: str, selector: str, where: str, debug: str):
     cmd_str = "SELECT {0} FROM {1} WHERE {2}".format(
         table_name, selector, where)
@@ -323,6 +329,7 @@ def select_from_db_table(db_name: str, table_name: str, selector: str, where: st
     conn.close()
     return return_row_list
 
+
 def render_clubs_homepage():
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
@@ -330,11 +337,12 @@ def render_clubs_homepage():
     items = c.fetchall()
     return items
 
+
 def render_clubs_clubpage(variable):
-    #implement for the club pages
+    # implement for the club pages
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
-    c.execute("SELECT club_name, club_description, club_recruitment FROM clubs WHERE club_name = '{0}'".format(variable))
+    c.execute(
+        "SELECT club_name, club_description, club_recruitment FROM clubs WHERE club_name = '{0}'".format(variable))
     items = c.fetchall()
     return items
-
