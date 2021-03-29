@@ -9,30 +9,36 @@
     <title>GITogether</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
+    <script src="https://kit.fontawesome.com/7314e0a160.js" crossorigin="anonymous"></script>
 
     
 
     <!-- Bootstrap core CSS -->
 <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
-
+<!-- 
     <style>
-      .bd-placeholder-img {
+      /* .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
+      } */
+      body {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
       }
-    </style>
+    </style> -->
 
     
     <!-- Custom styles for this template -->
     <link href="../static/css/home.css" rel="stylesheet">
   </head>
+
+
   <body>
     
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-      <a class="navbar-brand" href="#">GITogether</a>
+    <nav class="navbar navbar-expand-md navbar-dark bg-warning fixed-top">
+        <a class="navbar-brand" href="#"><img class="mb-auto" src="../static/images/wasp.svg" alt="" width=8% height=8%>GITogether</a>
 
       <!-- <button class="btn btn-outline-success" type="submit" id = "signOut" onclick = "location.href='signout.html'">Sign out</button> -->
 
@@ -72,8 +78,42 @@
     
     {% block body %} {% endblock %}
 
-  <div class="starter-template text-center py-5 px-3">
+  <div class="starter-template text-center py-5">
     <h1>Welcome</h1>
+
+    <div class="input-group">
+      <input type="text" class="form-control" placeholder="Search">
+      <!-- <div class="input-group-append"> -->
+        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filters</button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Favorites
+              </a>
+              <div class="dropdown-divider"></div>
+              
+              <a class="dropdown-item" href="#">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Category One
+              </a>
+              <a class="dropdown-item" href="#">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Category Two
+              </a>
+              <a class="dropdown-item" href="#">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Category Three
+              </a>
+            </div>
+        <button class="btn btn-warning btn-lg" type="button">
+          <i class="fa fa-search" style = "color: white"></i>
+        </button>
+      <!-- </div> -->
+    </div>
     <!-- <p>Email: {{email}}</p>
     <p>Password: {{password}}</p> -->
   </div> 
@@ -83,7 +123,8 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-4">
-      <button class="w-50 btn btn-sm btn-primary" type="submit" onclick= "location.href='register_club.html'">Register a Club</button>
+        <button class="w-50 btn btn-sm btn-warning" type="submit" onclick= "location.href='register_club.html'" style = "color: white">Register a Club</button>
+      <!-- <button class="w-50 btn btn-sm btn-warning" type="submit" onclick= "location.href='register_club.html'" style = "color: white">Register a Club</button> -->
     </div>
     <!-- grid of clubs -->
     <div class="col-8 clubGrid">
@@ -110,7 +151,9 @@
         <!-- second club -->
         <!-- <div class = "row border border-secondary rounded my-4 clubElem"> -->
         {% for item in items %}
-          <div class = "row border border-secondary rounded mb-4 clubElem">
+        <!-- <div class = "shadow p-3 mb-5 bg-white rounded clubElem"></div> -->
+          <div class = "row shadow sm bg-white rounded mb-4 clubElem">
+  
             <div class="h-100 col-2">
               <!-- <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div> -->
 
@@ -128,7 +171,6 @@
             </div> 
           </div>
         {% endfor %}
-
         </div>
     </div>
   </div>
@@ -136,7 +178,7 @@
 
 
 
-    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../static/assets/dist/js/bootstrap.bundle.min.js"></script>
      <!--JS scripts needed for dropdown menu to work-->
      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
