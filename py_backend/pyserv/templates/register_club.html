@@ -14,6 +14,20 @@
 
     <!-- Bootstrap core CSS -->
 <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  .dropdown-toggle::after {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: .3em;
+    vertical-align: middle;
+    float: right;
+    margin-top: 8px;
+  }
+  .dropdown-toggle {
+    text-align: left;
+  }
+</style>
 
 
     
@@ -37,6 +51,15 @@
     <textarea class= "form-control z-depth-1 mb-1" rows = "5" cols = "60" name = "recruitment" placeholder="Recruitment Info"></textarea>
     </textarea>
 
+    <button class="btn dropdown-toggle form-control mb-1 text-muted" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:white">Select categories...</button>
+    <div class="dropdown-menu">
+      
+      <a class="dropdown-item" href="#">Category One</a>
+      <a class="dropdown-item" href="#">Category Two</a>
+      <a class="dropdown-item" href="#">Category Three</a>
+    </div>
+
+
     <input type="recruit" id="contactFb" class="form-control mb-1" placeholder="Facebook Link" required autofocus>
     
     <label for="recruit" class="visually-hidden"></label>
@@ -45,15 +68,20 @@
     <label for="recruit" class="visually-hidden"></label>
     <input type="recruit" id="contactSlack" class="form-control mb-1" placeholder="Slack Link" required autofocus>
   <!-- <input type = "submit" value = "submit" /> -->
+  
 
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
+    <button class="w-100 btn btn-lg btn-warning" style = "color: white" type="submit">Submit</button>
 
     
   </form>
   
+  
 </main>
 
-
+  <!--JS scripts needed for dropdown menu to work-->
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
   </body>
 </html>
