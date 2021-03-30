@@ -37,8 +37,10 @@
 
   <body>
     
-    <nav class="navbar navbar-expand-md navbar-dark bg-warning fixed-top">
-        <a class="navbar-brand" href="#"><img class="mb-auto" src="../static/images/wasp.svg" alt="" width=8% height=8%>GITogether</a>
+    <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top mb-0">
+        <a class="navbar-brand" href="#"><img class="mb-auto logo" src="../static/images/logo.png" alt=""></a>
+        <!-- <a class="navbar-brand" href="#"></a> -->
+        
 
       <!-- <button class="btn btn-outline-success" type="submit" id = "signOut" onclick = "location.href='signout.html'">Sign out</button> -->
 
@@ -49,7 +51,7 @@
               <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-person-circle" viewBox="0 0 16 16">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-person-circle" viewBox="0 0 16 16">
                           <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                           <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
                       </svg>
@@ -63,7 +65,7 @@
       </div>
 </nav>
 
-<main class="container">
+<main class="container mb-5 mt-0">
 
   {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -79,7 +81,7 @@
     {% block body %} {% endblock %}
 
   <div class="starter-template text-center py-5">
-    <h1>Welcome</h1>
+    <h1 style = "color: white;">Welcome</h1>
 
     <div class="input-group">
       <input type="text" class="form-control" placeholder="Search">

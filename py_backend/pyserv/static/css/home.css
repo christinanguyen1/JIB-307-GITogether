@@ -3,11 +3,25 @@ body {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+
 #signOut {
   border-color: white;
   color: white;
 }
+ .img-fluid {
+   padding: 5%;
+ }
 
+ .logo {
+   max-height: 50px;
+   /* margin: 5px; */
+ }
+ .container {
+   background-image: url('../images/tech.jpeg');
+   background-size: cover;
+   background-position-x: 50%;
+   background-position-y: 70%;
+ }
 
 .clubGrid {
   /* border: 5px;
