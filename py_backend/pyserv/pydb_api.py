@@ -89,19 +89,16 @@ def db_row_exists(conn, table_name, attribute, value):
 # bcrypt API tools (for password hashing)
 
 
-def hash_password(plaintext_pass):
-    pass_bytes = plaintext_pass.encode("utf-8")
-    # hash password with a randomly generated salt
-    cost_rounds = 12
-    salt = bcrypt.gensalt(cost_rounds)
-    cyphertext_pass = bcrypt.hashpw(pass_bytes, salt).decode('utf8', 'stict')
-    return cyphertext_pass
+def hash_password(plaintext):
+    cypher = bcrypt.hashpw(plaintext.encode(
+        encoding="utf-8", errors="strict"), bcrypt.gensalt())
+    return cypher.decode(encoding="utf-8", errors="strict")
 
 
 def check_hash_password(plaintext_pass, cyphertext_pass):
-    plain_pass_bytes = plaintext_pass.encode("utf-8")
-    cypher_pass_bytes = cyphertext_pass.encode("utf-8")
-    password_matches = bcrypt.checkpw(plain_pass_bytes, cypher_pass_bytes)
+    password_matches = bcrypt.checkpw(plaintext_pass.encode(
+        encoding="utf-8", errors="strict"), cyphertext_pass.encode(
+        encoding="utf-8", errors="strict"))
     return password_matches
 
 # (API CALL) for registering a new user
@@ -115,6 +112,7 @@ def new_user_db(login_tuple):
     email = login_tuple[0]
     password = login_tuple[1]
     confirm_password = login_tuple[2]
+    #print("{} : {} : {}".format(email, password, confirm_password))
     if "@" not in email and "." not in email:
         print("invalid email: must include @ and .<domain>")
         raise InvalidEmailError
@@ -125,21 +123,25 @@ def new_user_db(login_tuple):
         print("password and confirmed password must match!")
         raise PasswordNotMatched
 
-    conn = sqlite3.connect('gitogether.db')
-    if db_table_exists(conn, 'user_login'):
+    default_fname = ""
+    default_lname = ""
+    default_is_admin = False
 
-        if db_row_exists(conn, "user_login", "email", email):
+    conn = sqlite3.connect('gitogether.db')
+    if db_table_exists(conn, 'user'):
+
+        if db_row_exists(conn, "user", "email", email):
             print("user already exists")
             raise UserAlreadyRegisteredError
 
         c = conn.cursor()
         # need to hash password and then insert into DB
         cyphertext_pass = hash_password(password)
-        c.execute('INSERT INTO user_login VALUES (?,?)',
-                  (email, cyphertext_pass))
+        c.execute('INSERT INTO user VALUES (?,?,?,?,?)',
+                  (email, cyphertext_pass, default_fname, default_lname, default_is_admin))
 
-        print("inserted (" + str(email) + ", " +
-              password + ", " + cyphertext_pass + ")")
+        # print("inserted (" + str(email) + ", " +
+        #       password + ", " + cyphertext_pass + ")")
 
         conn.commit()
         conn.close()
@@ -150,11 +152,12 @@ def new_user_db(login_tuple):
 
         # create table if not already made
         # hash passwords later
-        c.execute('''CREATE TABLE user_login (email text, password text)''')
+        c.execute('''CREATE TABLE user (email text, password text)''')
+        print("created table")
         # need to hash password and then insert into DB
         cyphertext_pass = hash_password(password)
-        c.execute('INSERT INTO user_login VALUES (?,?)',
-                  (email, cyphertext_pass))
+        c.execute('INSERT INTO user VALUES (?,?,?,?,?)',
+                  (email, cyphertext_pass, default_fname, default_lname, default_is_admin))
 
         conn.commit()
         conn.close()
@@ -172,23 +175,21 @@ def check_login_db(login_tuple):
     email = login_tuple[0]
     password = login_tuple[1]
     conn = sqlite3.connect('gitogether.db')
-    if not db_table_exists(conn, "user_login"):
+    if not db_table_exists(conn, "user"):
         print("table not found")
         raise UnknownError
     c = conn.cursor()
 
-    c.execute('SELECT * FROM user_login WHERE email=?',
+    c.execute('SELECT * FROM user WHERE email=?',
               (email,))
 
     result = c.fetchone()
-
-    if row_count == 0:
+    if result == 0:
         print("incorrect email: not found in db")
         raise EmailNotFoundError
 
-    conn.close()
-
     db_password = result[1]
+    c.close()
     return check_hash_password(password, db_password)
 
 # (API CALL) for finding if email exists in database for forgot
@@ -198,7 +199,7 @@ def check_login_db(login_tuple):
 def forgot_email(email):
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
-    cmd_str = "SELECT password FROM user_login WHERE email='{0}'".format(email)
+    cmd_str = "SELECT password FROM user WHERE email='{0}'".format(email)
     c.execute(cmd_str)
     result = c.fetchone()
     if result is None:

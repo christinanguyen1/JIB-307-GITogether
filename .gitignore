@@ -1,2 +1,5 @@
 .DS_Store
 py_backend/pyserv/__pycache__/pydb_api.cpython-37.pyc
+.vscode/settings.json
+py_backend/pyserv/__pycache__/*
+*.pyc
