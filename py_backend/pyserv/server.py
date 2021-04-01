@@ -100,16 +100,23 @@ def reg_club():
 def club_page(variable, favorite):
     print(favorite)
     print(session["email"])
+    userEmail = session["email"]
     isFav = False
     if (favorite == "notKnown"):
         # get the favorite information from the database and pass it in to isFav (default should be false)
-        isFav = True
+        # need isFav value to reflect within database
+        if checkFavorite(userEmail, variable):
+            isFav = True
+        else:
+            isFav = False
     elif (favorite == "favorite"):
         # change the database so that the club is favorited 
         isFav = True
+        favoriteClub(userEmail, variable)
     elif (favorite == "unfavorite"):
         # change the database so that the club is unfavorited
         isFav = False
+        unfavoriteClub(userEmail, variable)
     else:
         print("favorite functionality error")
     items = render_clubs_clubpage(variable)

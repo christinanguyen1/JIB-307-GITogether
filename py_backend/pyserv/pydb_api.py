@@ -345,7 +345,35 @@ def render_clubs_clubpage(variable):
     items = c.fetchall()
     return items
 
-# # checks whether 
-# def checkFavorite
+# check whether certain club and email combination exists in the table
+def checkFavorite(email, club):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT user_email FROM favorites WHERE user_email = ? AND favorite_name = ?', (email, club))    
+    items = c.fetchall()
+    print(items)
+    print("succesully checked whether club exists or not")
+    if len(items) == 0:
+        return False
+    else:
+        return True
 
 # first need to create favorite and unfavorite function
+def favoriteClub(email, club):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO favorites (user_email, favorite_name) VALUES (?,?)', (email, club))    
+    conn.commit()
+    conn.close()
+    print("succesully favorited a club")
+
+def unfavoriteClub(email, club):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM favorites WHERE user_email = ? AND favorite_name = ?', (email, club))    
+    conn.commit()
+    conn.close()
+    print("succesully unfavorited a club")
+
+#need to create button that goes back to the homepage
+    
