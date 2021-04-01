@@ -1,6 +1,6 @@
 # a tiny backend component to get data from the login screen
 
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 from pydb_api import *
 from flask_mail import Mail, Message
 
@@ -20,6 +20,7 @@ mail = Mail(app)
 def login():
     if request.method == "POST":
         email = str(request.form['inputEmail'])
+        session["email"] = email
         password = str(request.form['inputPassword'])
         # returns TRUE if login successful, FALSE if not
         try:
@@ -98,6 +99,7 @@ def reg_club():
 @app.route('/club_page.html/<variable>/<favorite>', methods=["GET", "POST"])
 def club_page(variable, favorite):
     print(favorite)
+    print(session["email"])
     isFav = False
     if (favorite == "notKnown"):
         # get the favorite information from the database and pass it in to isFav (default should be false)
