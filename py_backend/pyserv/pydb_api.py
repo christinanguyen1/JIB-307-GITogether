@@ -344,3 +344,8 @@ def render_clubs_clubpage(variable):
         "SELECT club_name, club_description, club_recruitment FROM clubs WHERE club_name = '{0}'".format(variable))
     items = c.fetchall()
     return items
+
+# # checks whether 
+# def checkFavorite
+
+# first need to create favorite and unfavorite function

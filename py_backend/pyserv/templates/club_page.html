@@ -11,7 +11,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
 
     
-
+    
     <!-- Bootstrap core CSS -->
     <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -57,6 +57,20 @@
             <button class="btn btn-primary w-100" type="edit" id = "edit">Edit</button>
             <button class="btn btn-primary w-100" type="submit" id="save" hidden>Save</button>
         </div>
+        <div class = "col-1">
+            <!-- if it is already favorited -->
+            {% if isFav %} 
+                <!-- <button class="btn btn-primary w-100" type="fav" id = "fav" onclick = "location.href='{{item1}}/{{not isFav}}'" hidden>Favorite</button> -->
+                <button class="btn btn-primary w-100" type="unfav" id="unfav" onclick = "location.href='unfavorite'">Unfavorite</button>
+            {% endif %}
+            <!-- if it is not favorited yet -->
+            {% if not isFav %}
+                <button class="btn btn-primary w-100" type="fav" id = "fav" onclick = "location.href='favorite'">Favorite</button>
+                <!-- <button class="btn btn-primary w-100" type="unfav" id="unfav" onclick = "location.href='{{item1}}/{{not isFav}}'" hidden>Unfavorite</button> -->
+            {% endif %}
+        </div>
+       
+        
     </div>
 
     <!--about section-->
@@ -107,11 +121,14 @@
 <!-- /.container -->
 
 
-
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <script src="../static/assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- edit and save button functionalities-->
     <script src="../static/js/club_page.js"></script>
+
+     <!-- favorite button functionalities -->
+    <!-- <script src="../static/js/favorite.js"></script> -->
 
     <!--JS scripts needed for dropdown menu to work-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

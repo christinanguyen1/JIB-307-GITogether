@@ -16,7 +16,6 @@ app.config['MAIL_USE_SSL'] = True
 
 mail = Mail(app)
 
-
 @app.route('/', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -96,14 +95,27 @@ def reg_club():
     return render_template("register_club.html")
 
 
-@app.route('/club_page.html/<variable>', methods=["GET", "POST"])
-def club_page(variable):
+@app.route('/club_page.html/<variable>/<favorite>', methods=["GET", "POST"])
+def club_page(variable, favorite):
+    print(favorite)
+    isFav = False
+    if (favorite == "notKnown"):
+        # get the favorite information from the database and pass it in to isFav (default should be false)
+        isFav = True
+    elif (favorite == "favorite"):
+        # change the database so that the club is favorited 
+        isFav = True
+    elif (favorite == "unfavorite"):
+        # change the database so that the club is unfavorited
+        isFav = False
+    else:
+        print("favorite functionality error")
     items = render_clubs_clubpage(variable)
     for item in items:
         item1 = item[0]
         item2 = item[1]
         item3 = item[2]
-    return render_template("club_page.html", item1=item1, item2=item2, item3=item3)
+    return render_template("club_page.html", item1=item1, item2=item2, item3=item3, isFav=isFav)
 
 
 @app.route('/forgot.html', methods=["GET", "POST"])
