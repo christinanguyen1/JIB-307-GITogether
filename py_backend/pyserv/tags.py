@@ -1,5 +1,4 @@
 import sqlite3
-imprt
 
 # tag error classes
 
@@ -17,6 +16,12 @@ class MalformedTag(TagError):
 
 # TAG-based search API
 
+# the tag machine is given the database to work on
+# useage should be to create a TagMachine object `tagm = TagMachine('gitogether.db')`
+# and then use `del tagm` when done with operations
+
+# tags should be comma separated values ex. "pro,wrestling,match,club,watch"
+
 
 class TagMachine:
 
@@ -24,12 +29,10 @@ class TagMachine:
         self.conn = sqlite3.connect(database)
         self.db = self.conn.cursor()
 
+    def __del__(self):
+        self.conn.close()
+
     def get_club_tags(club_name, tags):
-        for tag in tags:
-            if (' ' in tag):
-                raise MalformedTag
-            else:
-                insert_into_db_table("club", "tags", tag)
         pass
 
     def add_club_tags():
