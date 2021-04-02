@@ -60,11 +60,11 @@ class TagMachine:
 
     def get_club_tags(self, club_name: str):
         self.db.execute(
-            "SELECT tag_list FROM tags WHERE club_name = '{0}'".format(variable))
+            "SELECT tag_list FROM tags WHERE club_name = '{0}'".format(club_name))
         club_tags = self.db.fetchone()
         if not club_tags:
             raise ClubDoesNotExist
-        tag_list = self.db_format_to_taglist(club_tags[1])
+        tag_list = self.db_format_to_taglist(club_tags[0])
         return tag_list
 
     # new_tags should be given as a list of strings ex. ["underwater", "basket", "weaving"]
@@ -100,3 +100,52 @@ class TagMachine:
                 if key in club_tag_list:
                     result_list.append(club[0])
         return result_list
+
+# tests tag functionality
+
+
+def test_tags():
+    tagm = TagMachine('tagtest.db')
+
+    clubs = [("Dungeons and Dragons", ["tabletop", "roleplaying", "game", "dragon", "test"]),
+             ("AEW Fan Club", ["aew", "wrestling", "watch", "test"])]
+    # test adding
+    tagm.add_club_tags(clubs[0][0], clubs[0][1])
+    tagm.add_club_tags(clubs[1][0], clubs[1][1])
+
+    # test getting
+    print("after adding:")
+    print(tagm.get_club_tags(clubs[0][0]))
+    print(tagm.get_club_tags(clubs[1][0]))
+
+    # test clearing
+    tagm.clear_club_tags(clubs[0][0])
+    tagm.clear_club_tags(clubs[1][0])
+
+    print("\nafter clearing:")
+    print(tagm.get_club_tags(clubs[0][0]))
+    print(tagm.get_club_tags(clubs[1][0]))
+
+    tagm.add_club_tags(clubs[0][0], clubs[0][1])
+    tagm.add_club_tags(clubs[1][0], clubs[1][1])
+
+    # test searching
+    print("\nsearching tag: game")
+    print(tagm.search_club_by_tags(["game"]))
+    print("searching tag: buzz")
+    print(tagm.search_club_by_tags(["buzz"]))
+    print("searching tag: test")
+    print(tagm.search_club_by_tags(["test"]))
+
+    # test removal
+    print("\nafter removing tags: test")
+    tagm.remove_club_tags(clubs[0][0], ["test"])
+    tagm.remove_club_tags(clubs[1][0], ["test"])
+
+    print(tagm.get_club_tags(clubs[0][0]))
+    print(tagm.get_club_tags(clubs[1][0]))
+
+    del tagm
+
+# uncomment if you want to test
+# test_tags()
