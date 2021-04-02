@@ -46,10 +46,11 @@ class TagMachine:
     def get_club_tags(self, club_name):
         self.db.execute(
             "SELECT tag_list from tags WHERE club_name = '{0}'".format(variable))
-        club_tags = self.db.fetchall()
+        club_tags = self.db.fetchone()
         if not club_tags:
             raise ClubDoesNotExist
-        return club_tags
+        tag_list = self.db_format_to_taglist(club_tags[1])
+        return tag_list
 
     # new_tags should be given as a list of strings ex. ["underwater", "basket", "weaving"]
     def add_club_tags(self, club_name, new_tags):
