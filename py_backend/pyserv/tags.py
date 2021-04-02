@@ -20,8 +20,6 @@ class MalformedTag(TagError):
 # useage should be to create a TagMachine object `tagm = TagMachine('gitogether.db')`
 # and then use `del tagm` when done with operations
 
-# tags should be comma separated values ex. "pro,wrestling,match,club,watch"
-
 
 class TagMachine:
 
@@ -32,10 +30,30 @@ class TagMachine:
     def __del__(self):
         self.conn.close()
 
-    def get_club_tags(club_name, tags):
-        pass
+    def taglist_to_db_format(self, tags: list):
+        db_form = ""
+        last = len(tags) - 1
+        for i, tag in enumerate(tags):
+            if i == last:
+                db_form = db_form + str(tag)
+            else:
+                db_form = db_form + str(tag) + ","
+        return db_form
 
-    def add_club_tags():
+    def db_format_to_taglist(self, tagstr: str):
+        return tagstr.split(',')
+
+    def get_club_tags(self, club_name):
+        self.db.execute(
+            "SELECT tag_list from tags WHERE club_name = '{0}'".format(variable))
+        club_tags = self.db.fetchall()
+        if not club_tags:
+            raise ClubDoesNotExist
+        return club_tags
+
+    # new_tags should be given as a list of strings ex. ["underwater", "basket", "weaving"]
+    def add_club_tags(self, club_name, new_tags):
+
         pass
 
     def clear_club_tags():
