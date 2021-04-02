@@ -60,10 +60,14 @@ class TagMachine:
         self.conn.commit()
         return True
 
-    def clear_club_tags():
+    def clear_club_tags(self, club_name: str):
+        self.db.execute(
+            "INSERT or REPLACE INTO tags (club_name, tag_list) VALUES ('{0}', '');".format(club_name))
+        self.conn.commit()
         pass
 
     def remove_club_tags():
+
         pass
 
     def search_club_by_tags():
