@@ -84,7 +84,11 @@ class TagMachine:
         current_tags = self.get_club_tags(club_name)
         for tag in tags_to_remove:
             self.remove_all_tag_occurrances(current_tags, tag)
-        self.add_club_tags(club_name, current_tags)
+        new_tags = self.taglist_to_db_format(current_tags)
+        self.db.execute("UPDATE tags SET tag_list = '{0}' WHERE club_name = '{1}'".format(
+            new_tags, club_name))
+        self.conn.commit()
 
-    def search_club_by_tags():
+    def search_club_by_tags(self, key_tags: list):
+
         pass
