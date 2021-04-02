@@ -29,7 +29,7 @@ class TagMachine:
             if (' ' in tag):
                 raise MalformedTag
             else:
-
+                insert_into_db_table("club", "tags", tag)
         pass
 
     def add_club_tags():

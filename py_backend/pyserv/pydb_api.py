@@ -8,39 +8,35 @@ import bcrypt
 # error classes
 
 
-class Error:
+class InvalidEmailError(Exception):
     pass
 
 
-class InvalidEmailError(Error):
+class InvalidPasswordError(Exception):
     pass
 
 
-class InvalidPasswordError(Error):
+class NoSuchUserFoundError(Exception):
     pass
 
 
-class NoSuchUserFoundError(Error):
+class EmailNotFoundError(Exception):
     pass
 
 
-class EmailNotFoundError(Error):
+class IncorrectLoginError(Exception):
     pass
 
 
-class IncorrectLoginError(Error):
+class UserAlreadyRegisteredError(Exception):
     pass
 
 
-class UserAlreadyRegisteredError(Error):
+class PasswordNotMatched(Exception):
     pass
 
 
-class PasswordNotMatched(Error):
-    pass
-
-
-class UnknownError(Error):
+class UnknownError(Exception):
     pass
 
 # helper functions
@@ -112,7 +108,6 @@ def new_user_db(login_tuple):
     email = login_tuple[0]
     password = login_tuple[1]
     confirm_password = login_tuple[2]
-    #print("{} : {} : {}".format(email, password, confirm_password))
     if "@" not in email and "." not in email:
         print("invalid email: must include @ and .<domain>")
         raise InvalidEmailError

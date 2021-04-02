@@ -29,10 +29,27 @@ def login():
             if login_status:
                 items = render_clubs_homepage()
                 return render_template("home.html", email=email, password=password, items=items)
+
+
+<< << << < HEAD
         except:
             e = sys.exc_info()[0]
             print(e)
             flash("Invalid email/password combination")
+== == == =
+        except IncorrectLoginError:
+            flash("Malformed login tuple")
+            return redirect(url_for('login'))
+        except UnknownError:
+            flash("Database table not found")
+            return redirect(url_for('login'))
+        except EmailNotFoundError:
+            flash("Email not found")
+            return redirect(url_for('login'))
+        except Exception as e:
+            print(e)
+            flash("Other error")
+>>>>>> > main
             return redirect(url_for('login'))
         # print(login_status)
         # print(email)
@@ -55,10 +72,22 @@ def signup():
                 (new_email, new_password, confirm_password))
             if register_status:
                 return render_template("index.html")
-        except:
-            e = sys.exc_info()[0]
+        except InvalidEmailError:
+            flash("Email must include @ and domain")
+            return redirect(url_for('signup'))
+        except InvalidPasswordError:
+            flash(
+                "Password must be at least 8 characters \nand must contain at least 1 letter and number")
+            return redirect(url_for('signup'))
+        except PasswordNotMatched:
+            flash("Both passwords must match")
+            return redirect(url_for('signup'))
+        except UserAlreadyRegisteredError:
+            flash("User already registered:\ntry logging in?")
+            return redirect(url_for('signup'))
+        except Exception as e:
             print(e)
-            flash("Either:\nEmail does not include @ or .<domain>\nPassword does not contain atleast 8 characters with aleast one letter and digit\nPasswords don't match\nEmail already exists")
+            flash("Database error occurred")
             return redirect(url_for('signup'))
     return render_template("signup.html")
 
