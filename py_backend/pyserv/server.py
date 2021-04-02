@@ -3,6 +3,7 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from pydb_api import *
 from flask_mail import Mail, Message
+import sys
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -28,6 +29,14 @@ def login():
             if login_status:
                 items = render_clubs_homepage()
                 return render_template("home.html", email=email, password=password, items=items)
+
+
+<< << << < HEAD
+        except:
+            e = sys.exc_info()[0]
+            print(e)
+            flash("Invalid email/password combination")
+== == == =
         except IncorrectLoginError:
             flash("Malformed login tuple")
             return redirect(url_for('login'))
@@ -40,6 +49,7 @@ def login():
         except Exception as e:
             print(e)
             flash("Other error")
+>>>>>> > main
             return redirect(url_for('login'))
         # print(login_status)
         # print(email)
@@ -61,7 +71,6 @@ def signup():
             register_status = new_user_db(
                 (new_email, new_password, confirm_password))
             if register_status:
-                # TODO: NEED A CONFIRMATION PAGE AFTER SUBMITTING
                 return render_template("index.html")
         except InvalidEmailError:
             flash("Email must include @ and domain")
