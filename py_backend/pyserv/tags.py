@@ -3,15 +3,19 @@ import sqlite3
 # tag error classes
 
 
-class TagError:
+class TagError(Exception):
     pass
 
 
-class ClubDoesNotExist(TagError):
+class ClubDoesNotExist(Exception):
     pass
 
 
-class MalformedTag(TagError):
+class TagDoesNotExist(Exception):
+    pass
+
+
+class MalformedTag(Exception):
     pass
 
 # TAG-based search API
@@ -23,7 +27,7 @@ class MalformedTag(TagError):
 
 class TagMachine:
 
-    def __init__(self, database):
+    def __init__(self, database: str):
         self.conn = sqlite3.connect(database)
         self.db = self.conn.cursor()
 
@@ -43,7 +47,18 @@ class TagMachine:
     def db_format_to_taglist(self, tagstr: str):
         return tagstr.split(',')
 
-    def get_club_tags(self, club_name):
+    def remove_tag_occurrance(self, taglist: list, target: str):
+        try:
+            taglist.remove(target)
+        except Exception as e:
+            print("tried to remove a tag that never existed: " + target)
+            raise TagDoesNotExist
+
+    def remove_all_tag_occurrances(self, taglist: list, target: str):
+        while target in taglist:
+            self.remove_tag_occurrance(taglist, target)
+
+    def get_club_tags(self, club_name: str):
         self.db.execute(
             "SELECT tag_list from tags WHERE club_name = '{0}'".format(variable))
         club_tags = self.db.fetchone()
@@ -64,11 +79,12 @@ class TagMachine:
         self.db.execute(
             "INSERT or REPLACE INTO tags (club_name, tag_list) VALUES ('{0}', '');".format(club_name))
         self.conn.commit()
-        pass
 
-    def remove_club_tags():
-
-        pass
+    def remove_club_tags(self, club_name: str, tags_to_remove: list):
+        current_tags = self.get_club_tags(club_name)
+        for tag in tags_to_remove:
+            self.remove_all_tag_occurrances(current_tags, tag)
+        self.add_club_tags(club_name, current_tags)
 
     def search_club_by_tags():
         pass
