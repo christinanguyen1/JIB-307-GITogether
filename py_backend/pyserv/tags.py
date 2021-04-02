@@ -60,7 +60,7 @@ class TagMachine:
 
     def get_club_tags(self, club_name: str):
         self.db.execute(
-            "SELECT tag_list from tags WHERE club_name = '{0}'".format(variable))
+            "SELECT tag_list FROM tags WHERE club_name = '{0}'".format(variable))
         club_tags = self.db.fetchone()
         if not club_tags:
             raise ClubDoesNotExist
@@ -89,6 +89,14 @@ class TagMachine:
             new_tags, club_name))
         self.conn.commit()
 
+    # returns list of clubs matching the tags; returns empty list if none are found
     def search_club_by_tags(self, key_tags: list):
-
-        pass
+        result_list = list()
+        self.db.execute("SELECT * FROM tags")
+        all_clubs = self.db.fetchall()
+        for club in all_clubs:
+            club_tag_list = self.db_format_to_taglist(club[1])
+            for key in key_tags:
+                if key in club_tag_list:
+                    result_list.append(club[0])
+        return result_list
