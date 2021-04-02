@@ -146,7 +146,6 @@ def send_email():
         flash("That email does not exist")
         return redirect(url_for('reset_password'))
 
-
 @app.route('/home.html', methods=["GET", "POST"])
 def home():
     if request.method == 'POST':
@@ -157,9 +156,18 @@ def home():
         insert_into_club_table(club_name, club_description, club_recruitment)
         flash("Club Verification Received")
         items = render_clubs_homepage()
+        print(items)
         return render_template("home.html", items=items)
     return render_template("home.html")
 
+# server side when the favorite button is toggled
+@app.route('/home/favorite-toggled', methods=["GET", "POST"])
+def toggle_favorite():
+    # if request.method == 'POST':
+    userEmail = session["email"]
+    items = get_favorite_clubs(userEmail) 
+   
+    return render_template("home.html",items=items)
 
 if __name__ == '__main__':
     app.run(debug=True)
