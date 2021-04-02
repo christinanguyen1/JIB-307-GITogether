@@ -53,9 +53,12 @@ class TagMachine:
         return tag_list
 
     # new_tags should be given as a list of strings ex. ["underwater", "basket", "weaving"]
-    def add_club_tags(self, club_name, new_tags):
-
-        pass
+    def add_club_tags(self, club_name: str, new_tags: list):
+        tag_db_form = self.taglist_to_db_format(new_tags)
+        self.db.execute("INSERT or REPLACE INTO tags (club_name, tag_list) VALUES ('{0}', '{1}');".format(
+            club_name, tag_db_form))
+        self.conn.commit()
+        return True
 
     def clear_club_tags():
         pass
