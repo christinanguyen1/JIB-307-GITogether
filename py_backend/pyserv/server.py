@@ -48,8 +48,6 @@ def login():
     return render_template("index.html")
 
 # loads signup page
-
-
 @app.route('/signup.html', methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -83,8 +81,6 @@ def signup():
     return render_template("signup.html")
 
 # loads signout page
-
-
 @app.route('/index.html', methods=["GET", "POST"])
 def signout():
     return render_template("index.html")
@@ -98,16 +94,16 @@ def reg_club():
 
 @app.route('/club_page.html/<variable>/<favorite>', methods=["GET", "POST"])
 def club_page(variable, favorite):
-    print("THIS IS A FAVORITE")
-    print(favorite)
-    print("THIS IS A VARIABLE")
-    print(variable)
+    # print("THIS IS A FAVORITE")
+    # print(favorite)
+    # print("THIS IS A VARIABLE")
+    # print(variable)
+    print("Signed as User:")
     print(session["email"])
     userEmail = session["email"]
     isFav = False
     if (favorite == "notKnown"):
-        # get the favorite information from the database and pass it in to isFav (default should be false)
-        # need isFav value to reflect within database
+        # need to know whether a club is favorited or not in the database first
         if checkFavorite(userEmail, variable):
             isFav = True
         else:
@@ -149,6 +145,7 @@ def send_email():
         flash("That email does not exist")
         return redirect(url_for('reset_password'))
 
+# run home() wheneever we un-toggle from the dropdown menu
 @app.route('/home.html', methods=["GET", "POST"])
 def home():
     if request.method == 'POST':
@@ -160,7 +157,6 @@ def home():
         flash("Club Verification Received")
         items = render_clubs_homepage()
         return render_template("home.html", items=items)
-    # print("WENT INTO THE HOME FUNCTION TWICE")
     items = render_clubs_homepage()
     return render_template("home.html", items=items)
 
