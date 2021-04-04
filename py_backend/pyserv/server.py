@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for, ses
 from pydb_api import *
 from flask_mail import Mail, Message
 import sys
+from tags import *
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -23,6 +24,8 @@ def login():
         email = str(request.form['inputEmail'])
         session["email"] = email
         password = str(request.form['inputPassword'])
+        print(email)
+        print(password)
         # returns TRUE if login successful, FALSE if not
         try:
             login_status = check_login_db((email, password))
