@@ -11,10 +11,11 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
     <script src="https://kit.fontawesome.com/7314e0a160.js" crossorigin="anonymous"></script>
 
+
     
 
     <!-- Bootstrap core CSS -->
-<link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
 <!-- 
     <style>
       /* .bd-placeholder-img {
@@ -32,7 +33,7 @@
     
     <!-- Custom styles for this template -->
     <link href="../static/css/home.css" rel="stylesheet">
-  </head>
+  </head> 
 
 
   <body>
@@ -84,7 +85,7 @@
     <h1 style = "color: white;">Welcome</h1>
 
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search">
+      <input type="text" class="form-control" placeholder="Search" id = "search">
       <!-- <div class="input-group-append"> -->
         <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filters</button>
             <div class="dropdown-menu">
@@ -115,7 +116,7 @@
                     Category Three
               </a>
             </div>
-        <button class="btn btn-warning btn-lg" type="button">
+        <button class="btn btn-warning btn-lg" type="button" id = "search_button">
           <i class="fa fa-search" style = "color: white"></i>
         </button>
       <!-- </div> -->
@@ -188,6 +189,9 @@
 
 
     <script src="../static/assets/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!--script to retrieve search string-->
+    <script src="../static/js/home.js"></script>
      <!--JS scripts needed for dropdown menu to work-->
      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -200,6 +204,7 @@
           <td>{{item[1]}}</td>
       </td>
       {% endfor %} -->
+
       
       
   </body>
