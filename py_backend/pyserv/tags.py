@@ -149,3 +149,37 @@ def test_tags():
 
 # uncomment if you want to test
 # test_tags()
+
+# new_tags should be given as a list of strings ex. ["underwater", "basket", "weaving"]
+def add_club_tags(club_name: str, new_tags: str):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO tags (club_name, tag_list) VALUES (?,?)', (club_name, new_tags))    
+    conn.commit()
+    conn.close()
+    print("succesully tagged a club")
+
+def get_tag_clubs(tag):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT club_name FROM tags where tag_list = ?', (tag,))    
+    items_in_tag = c.fetchall()
+    items_in_tag = [f[0] for f in items_in_tag]
+    result = []
+    for i in items_in_tag:
+        conn2 = sqlite3.connect('gitogether.db')
+        c2 = conn2.cursor()
+        c2.execute('SELECT club_name, club_description FROM clubs where club_name = ?', (i,))
+        info = c2.fetchone()
+        result.append(info)
+    return result
+
+# def taglist_to_db_format(tags: list):
+#     db_form = ""
+#     last = len(tags) - 1
+#     for i, tag in enumerate(tags):
+#         if i == last:
+#             db_form = db_form + str(tag)
+#         else:
+#             db_form = db_form + str(tag) + ","
+#     return db_form
