@@ -98,7 +98,10 @@ def reg_club():
 
 @app.route('/club_page.html/<variable>/<favorite>', methods=["GET", "POST"])
 def club_page(variable, favorite):
+    print("THIS IS A FAVORITE")
     print(favorite)
+    print("THIS IS A VARIABLE")
+    print(variable)
     print(session["email"])
     userEmail = session["email"]
     isFav = False
@@ -156,9 +159,10 @@ def home():
         insert_into_club_table(club_name, club_description, club_recruitment)
         flash("Club Verification Received")
         items = render_clubs_homepage()
-        print(items)
         return render_template("home.html", items=items)
-    return render_template("home.html")
+    # print("WENT INTO THE HOME FUNCTION TWICE")
+    items = render_clubs_homepage()
+    return render_template("home.html", items=items)
 
 # server side when the favorite button is toggled
 @app.route('/home/favorite-toggled', methods=["GET", "POST"])

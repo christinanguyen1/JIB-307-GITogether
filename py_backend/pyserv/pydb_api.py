@@ -355,7 +355,6 @@ def checkFavorite(email, club):
     c = conn.cursor()
     c.execute('SELECT user_email FROM favorites WHERE user_email = ? AND favorite_name = ?', (email, club))    
     items = c.fetchall()
-    print(items)
     print("succesully checked whether club exists or not")
     if len(items) == 0:
         return False
@@ -386,7 +385,7 @@ def unfavoriteClub(email, club):
 def get_favorite_clubs(email):
     conn = sqlite3.connect('gitogether.db')
     c = conn.cursor()
-    c.execute('SELECT favorite_name FROM favorites')    
+    c.execute('SELECT favorite_name FROM favorites where user_email = ?', (email,))    
     items_in_favorite = c.fetchall()
     items_in_favorite = [f[0] for f in items_in_favorite]
     result = []

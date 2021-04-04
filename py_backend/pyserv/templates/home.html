@@ -89,6 +89,7 @@
         <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filters</button>
             <div class="dropdown-menu">
               <!-- once toggled, append logic string into the URL so server can notice that favorites was toggled -->
+              <!-- adfasfasfaasfdasfasfsa -->
               <a class="dropdown-item" href="#" onclick = "location.href='home/favorite-toggled'">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                   <label class="form-check-label" for="flexCheckDefault">
@@ -167,7 +168,10 @@
               <img src="../static/images/community.svg" class = "img-fluid h-100">
             </div>
             <div class="col">
-              <button class = "textlink" onclick = "location.href='club_page.html/{{item[0]}}/notKnown'">{{item[0]}}</button>
+              <!-- adfasfasfaasfdasfasfsa -->
+              <!-- <button class = "textlink" onclick = "location.href='club_page.html/{{item[0]}}/notKnown'">{{item[0]}}</button> -->
+              <a href= "{{ url_for('club_page', variable = item[0], favorite = 'notKnown')}}" class="textlink">{{item[0]}}</a>
+              <!-- {{ url_for('club_page', variable = item[0], favorite = "notKnown") }} -->
               <div class="clubInfo">
                <p>{{item[1]}}</p>
               </div>
