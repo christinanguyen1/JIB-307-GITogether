@@ -1,6 +1,6 @@
 # a tiny backend component to get data from the login screen
 
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, session
 from pydb_api import *
 from flask_mail import Mail, Message
 import sys
@@ -17,11 +17,11 @@ app.config['MAIL_USE_SSL'] = True
 
 mail = Mail(app)
 
-
 @app.route('/', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         email = str(request.form['inputEmail'])
+        session["email"] = email
         password = str(request.form['inputPassword'])
         # returns TRUE if login successful, FALSE if not
         try:
@@ -49,8 +49,6 @@ def login():
     return render_template("index.html")
 
 # loads signup page
-
-
 @app.route('/signup.html', methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -83,8 +81,6 @@ def signup():
     return render_template("signup.html")
 
 # loads signout page
-
-
 @app.route('/index.html', methods=["GET", "POST"])
 def signout():
     return render_template("index.html")
@@ -96,14 +92,38 @@ def reg_club():
     return render_template("register_club.html")
 
 
-@app.route('/club_page.html/<variable>', methods=["GET", "POST"])
-def club_page(variable):
+@app.route('/club_page.html/<variable>/<favorite>', methods=["GET", "POST"])
+def club_page(variable, favorite):
+    # print("THIS IS A FAVORITE")
+    # print(favorite)
+    # print("THIS IS A VARIABLE")
+    # print(variable)
+    print("Signed as User:")
+    print(session["email"])
+    userEmail = session["email"]
+    isFav = False
+    if (favorite == "notKnown"):
+        # need to know whether a club is favorited or not in the database first
+        if checkFavorite(userEmail, variable):
+            isFav = True
+        else:
+            isFav = False
+    elif (favorite == "favorite"):
+        # change the database so that the club is favorited 
+        isFav = True
+        favoriteClub(userEmail, variable)
+    elif (favorite == "unfavorite"):
+        # change the database so that the club is unfavorited
+        isFav = False
+        unfavoriteClub(userEmail, variable)
+    else:
+        print("favorite functionality error")
     items = render_clubs_clubpage(variable)
     for item in items:
         item1 = item[0]
         item2 = item[1]
         item3 = item[2]
-    return render_template("club_page.html", item1=item1, item2=item2, item3=item3)
+    return render_template("club_page.html", item1=item1, item2=item2, item3=item3, isFav=isFav)
 
 
 @app.route('/forgot.html', methods=["GET", "POST"])
@@ -125,7 +145,7 @@ def send_email():
         flash("That email does not exist")
         return redirect(url_for('reset_password'))
 
-
+# run home() wheneever we un-toggle from the dropdown menu
 @app.route('/home.html', methods=["GET", "POST"])
 def home():
     if request.method == 'POST':
@@ -137,8 +157,17 @@ def home():
         flash("Club Verification Received")
         items = render_clubs_homepage()
         return render_template("home.html", items=items)
-    return render_template("home.html")
+    items = render_clubs_homepage()
+    return render_template("home.html", items=items)
 
+# server side when the favorite button is toggled
+@app.route('/home/favorite-toggled', methods=["GET", "POST"])
+def toggle_favorite():
+    # if request.method == 'POST':
+    userEmail = session["email"]
+    items = get_favorite_clubs(userEmail) 
+   
+    return render_template("home.html",items=items)
 
 if __name__ == '__main__':
     app.run(debug=True)

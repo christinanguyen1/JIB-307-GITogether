@@ -331,6 +331,9 @@ def render_clubs_homepage():
     c = conn.cursor()
     c.execute('SELECT club_name, club_description FROM clubs')
     items = c.fetchall()
+    # for i in items:
+    #     print(i[0])
+
     return items
 
 
@@ -341,4 +344,60 @@ def render_clubs_clubpage(variable):
     c.execute(
         "SELECT club_name, club_description, club_recruitment FROM clubs WHERE club_name = '{0}'".format(variable))
     items = c.fetchall()
+    # print(items[0][0])
     return items
+
+# check whether certain club and email combination exists in the table
+def checkFavorite(email, club):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT user_email FROM favorites WHERE user_email = ? AND favorite_name = ?', (email, club))    
+    items = c.fetchall()
+    print("succesully checked whether club exists or not")
+    if len(items) == 0:
+        return False
+    else:
+        return True
+
+# favorites a club, so this adds a club and email combination to the table
+def favoriteClub(email, club):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('INSERT INTO favorites (user_email, favorite_name) VALUES (?,?)', (email, club))    
+    conn.commit()
+    conn.close()
+    print("succesully favorited a club")
+
+# unfavorites a club, so this deletes a club and email combination to the table
+def unfavoriteClub(email, club):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('DELETE FROM favorites WHERE user_email = ? AND favorite_name = ?', (email, club))    
+    conn.commit()
+    conn.close()
+    print("succesully unfavorited a club")
+
+#need to create button that goes back to the homepage
+
+# get all of the favorited clubs
+def get_favorite_clubs(email):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT favorite_name FROM favorites where user_email = ?', (email,))    
+    items_in_favorite = c.fetchall()
+    items_in_favorite = [f[0] for f in items_in_favorite]
+    result = []
+    for i in items_in_favorite:
+        conn2 = sqlite3.connect('gitogether.db')
+        c2 = conn2.cursor()
+        c2.execute('SELECT club_name, club_description FROM clubs where club_name = ?', (i,))
+        info = c2.fetchone()
+        result.append(info)
+    return result
+
+
+
+
+
+
+  

@@ -8,15 +8,18 @@
     <meta name="generator" content="Hugo 0.79.0">
     <title>GITogether</title>
 
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+
+
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/starter-template/">
 
-    
 
+    
     <!-- Bootstrap core CSS -->
-    <link href="../static/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/assets/dist/css/bootstrap.min.css">
 
     <!-- Custom styles for this template -->
-    <link href="../static/css/club_page.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/club_page.css">
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -57,6 +60,28 @@
             <button class="btn btn-primary w-100" type="edit" id = "edit">Edit</button>
             <button class="btn btn-primary w-100" type="submit" id="save" hidden>Save</button>
         </div>
+        <div class = "col-1">
+            <!-- if it is already favorited -->
+            {% if isFav %} 
+                <!-- <button class="btn btn-primary w-100" type="fav" id = "fav" onclick = "location.href='{{item1}}/{{not isFav}}'" hidden>Favorite</button> -->
+                <!-- <button class="btn btn-primary w-100" type="unfav" id="unfav" onclick = "location.href='unfavorite'">Unfavorite</button> -->
+                <a href= "{{ url_for('club_page', variable = item1, favorite = 'unfavorite')}}" class="btn btn-primary">Unfavorite</a>
+
+            {% endif %}
+            <!-- if it is not favorited yet -->
+            {% if not isFav %}
+                <!-- <button class="btn btn-primary w-100" type="fav" id = "fav" onclick = "location.href='favorite'">Favorite</button> -->
+                <a href= "{{ url_for('club_page', variable = item1, favorite = 'favorite')}}" class="btn btn-primary">Favorite</a>
+                <!-- <button class="btn btn-primary w-100" type="unfav" id="unfav" onclick = "location.href='{{item1}}/{{not isFav}}'" hidden>Unfavorite</button> -->
+            {% endif %}
+        </div>
+        <div class = "col-1">
+            <!-- <button class="btn btn-primary w-100" type="goback" id = "goback" onclick = "location.href='home.html'">Go Back</button> -->
+            <a href= "{{ url_for('home')}}" class="btn btn-primary">Go Back</a>
+
+        </div>
+       
+        
     </div>
 
     <!--about section-->
@@ -107,11 +132,13 @@
 <!-- /.container -->
 
 
-
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
     <script src="../static/assets/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- edit and save button functionalities-->
     <script src="../static/js/club_page.js"></script>
+
+  
 
     <!--JS scripts needed for dropdown menu to work-->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
