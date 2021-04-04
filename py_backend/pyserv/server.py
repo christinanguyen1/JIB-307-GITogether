@@ -119,8 +119,13 @@ def club_page(variable, favorite):
         # change the database so that the club is unfavorited
         isFav = False
         unfavoriteClub(userEmail, variable)
-    else:
-        print("favorite functionality error")
+    else: 
+        # usually when the program enters here, it means that the user had tagged. 
+        # now we need to make sure that tagged clubs' favorite information is consistent
+        if checkFavorite(userEmail, variable):
+            isFav = True
+        else:
+            isFav = False
     items = render_clubs_clubpage(variable)
     for item in items:
         item1 = item[0]
@@ -156,6 +161,20 @@ def home():
         club_name = str(request.form['club_name'])
         club_description = str(request.form['description'])
         club_recruitment = str(request.form['recruitment'])
+        # add the tags for the club
+        if request.form.get('academic') == "checked":
+            add_club_tags(club_name, 'academic')
+        if request.form.get('social') == "checked":
+            add_club_tags(club_name, 'social')
+        if request.form.get('cultural') == "checked":
+            add_club_tags(club_name, 'cultural')
+        if request.form.get('athletic') == "checked":
+            add_club_tags(club_name, 'athletic')
+        if request.form.get('service') == "checked":
+            add_club_tags(club_name, 'service')
+        if request.form.get('creativity') == "checked":
+            add_club_tags(club_name, 'creativity')
+
         insert_into_club_table(club_name, club_description, club_recruitment)
         flash("Club Verification Received")
         items = render_clubs_homepage()
@@ -167,10 +186,32 @@ def home():
 @app.route('/home/favorite-toggled', methods=["GET", "POST"])
 def toggle_favorite():
     # if request.method == 'POST':
+    tagged = False
     userEmail = session["email"]
     items = get_favorite_clubs(userEmail) 
    
-    return render_template("home.html",items=items)
+    return render_template("home.html",items=items, tagged=tagged)
+
+# managing the tag stuff when toggeld
+@app.route('/home/<variable>', methods=["GET", "POST"])
+def toggle_tag(variable):
+    # print("entered next variable")
+    tagged = True
+    print(variable)
+    if variable == 'Academic-toggled':
+        items = get_tag_clubs('academic')
+    if variable == 'Social-toggled':
+        items = get_tag_clubs('social')
+    if variable == 'Cultural-toggled':
+        items = get_tag_clubs('cultural')
+    if variable == 'Athletic-toggled':
+        items = get_tag_clubs('athletic')
+    if variable == 'Service-toggled':
+        items = get_tag_clubs('service')
+    if variable == 'Creativity-toggled':
+        items = get_tag_clubs('creativity')
+     
+    return render_template("home.html",items=items, tagged=tagged)
 
 if __name__ == '__main__':
     app.run(debug=True)

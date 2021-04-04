@@ -100,20 +100,35 @@
               </a>
               <div class="dropdown-divider"></div>
               
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="#" onclick = "location.href='home/Academic-toggled'">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                   <label class="form-check-label" for="flexCheckDefault">
-                    Category One
+                    Academic
               </a>
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="#" onclick = "location.href='home/Social-toggled'">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                   <label class="form-check-label" for="flexCheckDefault">
-                    Category Two
+                    Social
               </a>
-              <a class="dropdown-item" href="#">
+              <a class="dropdown-item" href="#" onclick = "location.href='home/Cultural-toggled'">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                   <label class="form-check-label" for="flexCheckDefault">
-                    Category Three
+                    Cultural
+              </a>
+              <a class="dropdown-item" href="#" onclick = "location.href='home/Athletic-toggled'">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Athletic
+              </a>
+              <a class="dropdown-item" href="#" onclick = "location.href='home/Service-toggled'">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Service
+              </a>
+              <a class="dropdown-item" href="#" onclick = "location.href='home/Creativity-toggled'">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Creativity
               </a>
             </div>
         <button class="btn btn-warning btn-lg" type="button" id = "search_button">
@@ -173,7 +188,13 @@
             <div class="col">
               <!-- adfasfasfaasfdasfasfsa -->
               <!-- <button class = "textlink" onclick = "location.href='club_page.html/{{item[0]}}/notKnown'">{{item[0]}}</button> -->
-              <a href= "{{ url_for('club_page', variable = item[0], favorite = 'notKnown')}}" class="textlink">{{item[0]}}</a>
+              {% if not tagged %}
+                <a href= "{{ url_for('club_page', variable = item[0], favorite = 'notKnown')}}" class="textlink">{{item[0]}}</a>
+              {% endif %}
+              {% if tagged %}
+                <a href= "{{ url_for('club_page', variable = item[0], favorite = 'tagged')}}" class="textlink">{{item[0]}}</a>
+              {% endif %}
+
               <!-- {{ url_for('club_page', variable = item[0], favorite = "notKnown") }} -->
               <div class="clubInfo">
                <p>{{item[1]}}</p>
