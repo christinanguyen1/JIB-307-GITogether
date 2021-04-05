@@ -213,6 +213,14 @@ def toggle_tag(variable):
      
     return render_template("home.html",items=items, tagged=tagged)
 
+@app.route('/search', methods=["GET", "POST"])
+def search():
+    if request.method == 'GET':
+        query = request.args.get('search')
+        items = render_clubs_homepage_search(query)
+        return render_template("home.html", items=items)
+    return render_clubs_homepage("home.html")
+
 if __name__ == '__main__':
     app.run(debug=True)
     # app.run()

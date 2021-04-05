@@ -395,6 +395,21 @@ def get_favorite_clubs(email):
         result.append(info)
     return result
 
+def render_clubs_homepage_search(query):
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT club_name, club_description FROM clubs')
+    items = c.fetchall()
+    print(items)
+    print(query)
+    res = []
+    for tup in items:
+        tup_string = str(tup)
+        if ((tup_string.lower()).find(query) != -1):
+            res.append(tup)
+    return res
+
+
 
 
 
