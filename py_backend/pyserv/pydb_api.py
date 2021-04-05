@@ -333,6 +333,19 @@ def render_clubs_homepage():
     items = c.fetchall()
     return items
 
+def render_clubs_homepage_search(query):
+    print(query)
+    conn = sqlite3.connect('gitogether.db')
+    c = conn.cursor()
+    c.execute('SELECT club_name, club_description FROM clubs')
+    items = c.fetchall()
+    res = []
+    for tup in items:
+        tup_string = str(tup)
+        if ((tup_string.lower()).find(query) != -1):
+            res.append(tup)
+    return res
+
 
 def render_clubs_clubpage(variable):
     # implement for the club pages

@@ -4,6 +4,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from pydb_api import *
 from flask_mail import Mail, Message
 import sys
+import json
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -139,6 +140,13 @@ def home():
         return render_template("home.html", items=items)
     return render_template("home.html")
 
+@app.route('/filter', methods=["GET", "POST"])
+def filter():
+    if request.method == "GET":
+        query = request.args.get('search')
+        items = render_clubs_homepage_search(query)
+        return render_template("home.html", items=items)
+    return render_template("home.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
