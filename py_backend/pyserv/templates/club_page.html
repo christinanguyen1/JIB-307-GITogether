@@ -57,21 +57,21 @@
             <h2 id ="cName">{{item1}}</h2>
         </div>
         <div class = "col-1">
-            <button class="btn btn-primary w-100" type="edit" id = "edit">Edit</button>
-            <button class="btn btn-primary w-100" type="submit" id="save" hidden>Save</button>
+            <button class="btn btn-warning w-100" style = "color: white;" type="edit" id = "edit">Edit</button>
+            <button class="btn btn-warning w-100" style = "color: white;" type="submit" id="save" hidden>Save</button>
         </div>
         <div class = "col-1">
             <!-- if it is already favorited -->
             {% if isFav %} 
                 <!-- <button class="btn btn-primary w-100" type="fav" id = "fav" onclick = "location.href='{{item1}}/{{not isFav}}'" hidden>Favorite</button> -->
                 <!-- <button class="btn btn-primary w-100" type="unfav" id="unfav" onclick = "location.href='unfavorite'">Unfavorite</button> -->
-                <a href= "{{ url_for('club_page', variable = item1, favorite = 'unfavorite')}}" class="btn btn-primary">Unfavorite</a>
+                <a href= "{{ url_for('club_page', variable = item1, favorite = 'unfavorite')}}" class="btn btn-warning" style = "color: white;">Unfavorite</a>
 
             {% endif %}
             <!-- if it is not favorited yet -->
             {% if not isFav %}
                 <!-- <button class="btn btn-primary w-100" type="fav" id = "fav" onclick = "location.href='favorite'">Favorite</button> -->
-                <a href= "{{ url_for('club_page', variable = item1, favorite = 'favorite')}}" class="btn btn-primary">Favorite</a>
+                <a href= "{{ url_for('club_page', variable = item1, favorite = 'favorite')}}" class="btn btn-warning" style = "color: white;">Favorite</a>
                 <!-- <button class="btn btn-primary w-100" type="unfav" id="unfav" onclick = "location.href='{{item1}}/{{not isFav}}'" hidden>Unfavorite</button> -->
             {% endif %}
         </div>
