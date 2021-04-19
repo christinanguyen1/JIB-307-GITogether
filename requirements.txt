@@ -11,4 +11,4 @@ MarkupSafe==1.1.1
 pycparser==2.20
 six==1.15.0
 Werkzeug==1.0.1
-web: gunicorn app:app
+web: gunicorn app:server
