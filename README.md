@@ -8,8 +8,6 @@
 
 ## Release Notes (v1.1)
 
----
-
 ### New Feature List
 
 - added support for categorizing new clubs
@@ -35,8 +33,6 @@
 - search by category is restricted to a single category per query
 
 ## Installation Guide
-
----
 
 ### Requisite Software for Installation
 
