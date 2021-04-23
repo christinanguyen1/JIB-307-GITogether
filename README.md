@@ -31,6 +31,8 @@
 - club creators cannot specify additional, self-generated tags for the club
 - all changes created in the edit button are being reflected in the UI but description information and social media links are not being properly modified in the backend
 - search by category is restricted to a single category per query
+- cannot view a member roster
+- lack of separation between a club creator/student looking to join a club
 
 ## Installation Guide
 
