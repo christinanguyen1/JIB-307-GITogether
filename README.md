@@ -57,9 +57,9 @@ Once that is done, all other libraries needed are included in the Python3 standa
 
 For more information on the libraries used / troubleshooting, see:
 
-https://flask.palletsprojects.com/en/1.1.x/ (`flask`)
-https://flask-mail.readthedocs.io/en/latest/ (`flask-mail`)
-https://pypi.org/project/bcrypt/ (`bcrypt`)
+- https://flask.palletsprojects.com/en/1.1.x/ (`flask`)
+- https://flask-mail.readthedocs.io/en/latest/ (`flask-mail`)
+- https://pypi.org/project/bcrypt/ (`bcrypt`)
 
 ### Download Instructions
 
